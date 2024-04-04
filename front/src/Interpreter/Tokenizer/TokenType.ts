@@ -4,7 +4,8 @@ export enum TokenType {
     TRUE, FALSE,
 
     EOF,
-    
+    // I think its anything else other than these
+    IDENTIFIER,
     // literals
     NUMBER, STRING, BOOLEAN,
 

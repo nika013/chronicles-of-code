@@ -1,13 +1,13 @@
 import {TokenType} from "./TokenType.ts";
 
-export type myNever = never | null;
+export type literalType = string | number | boolean | null;
 
 export class Token {
     type: TokenType;
     lexeme: string;
-    literal: myNever;
+    literal: literalType;
 
-    constructor(type: TokenType, lexeme: string, literal: myNever) {
+    constructor(type: TokenType, lexeme: string, literal: literalType) {
         this.type = type
         this.lexeme = lexeme
         this.literal = literal

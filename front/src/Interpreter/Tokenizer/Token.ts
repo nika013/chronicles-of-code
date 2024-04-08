@@ -11,7 +11,6 @@ export class Token {
         this.type = type
         this.lexeme = lexeme
         this.literal = literal
-        
     }
     
     public  toString(): string {

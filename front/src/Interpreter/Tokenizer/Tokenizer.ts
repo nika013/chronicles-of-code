@@ -15,7 +15,7 @@ export class Tokenizer {
         this.deleteUnnecessarySpaces()
     }
 
-    scanTokens():Token[] {
+    scanTokens(): Token[] {
         while(!this.isAtEnd()) {
             this.start = this.current
             this.scanToken()
@@ -154,7 +154,6 @@ export class Tokenizer {
         this.advance()
         const value = this.source.substring(this.start + 1, this.current - 1);
         this.addToken(TokenType.STRING, value)
-        
     }
     
     private match(expected: string): boolean {
@@ -174,7 +173,7 @@ export class Tokenizer {
         return this.source.charAt(this.current++);
     }
 
-    private isAtEnd() {
+    private isAtEnd(): boolean {
         return this.current >= this.source.length
     }
 }

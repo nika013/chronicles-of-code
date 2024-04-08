@@ -1,4 +1,4 @@
-import {TokenType} from "./TokenType.ts";
+import {TokenType} from "../Tokenizer/TokenType.ts";
 
 export type literalType = string | number | boolean | null;
 

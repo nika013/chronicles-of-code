@@ -1,4 +1,4 @@
-import {literalType, Token} from "./Token.ts";
+import {literalType, Token} from "../AST/Token.ts";
 import {TokenType} from "./TokenType.ts";
 import {keywords} from "./Keywords.ts"
 

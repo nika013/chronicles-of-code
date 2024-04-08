@@ -15,6 +15,10 @@ export class Tokenizer {
         this.deleteUnnecessarySpaces()
     }
 
+    public getSource(): string {
+        return this.source
+    }
+
     scanTokens(): Token[] {
         while(!this.isAtEnd()) {
             this.start = this.current
@@ -35,7 +39,7 @@ export class Tokenizer {
     }
     
     private deleteComments() {
-        this.source = this.source.replace(/^\/\/.*$/gm, '');
+        this.source = this.source.replace(/^\s*\/\/.*$/gm, '');
     }
     
     private addToken(type: TokenType,  literal: literalType) {
@@ -91,7 +95,6 @@ export class Tokenizer {
     private isAlphaNumeric(c: string): boolean{
         return this.isAlpha(c) || this.isDigit(c);
     }
-
 
     private doIdentifier() {
         while(this.isAlphaNumeric(this.peek())){

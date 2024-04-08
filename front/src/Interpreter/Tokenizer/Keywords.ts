@@ -14,4 +14,3 @@ export const keywords: Map<string, TokenType> = new Map([
     // TO DO: change its name
     ["ბულეანი", TokenType.BOOLEAN],
 ]);
-

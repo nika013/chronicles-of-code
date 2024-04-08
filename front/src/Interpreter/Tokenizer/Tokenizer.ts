@@ -2,8 +2,6 @@ import {literalType, Token} from "./Token.ts";
 import {TokenType} from "./TokenType.ts";
 import {keywords} from "./Keywords.ts"
 
- 
-    
 export class Tokenizer {
     private source: string;
     private tokens: Token[] = []
@@ -14,11 +12,9 @@ export class Tokenizer {
         this.source = source;
         this.current = 0
         this.start = 0
-
         this.deleteUnnecessarySpaces()
     }
 
-    
     scanTokens():Token[] {
         while(!this.isAtEnd()) {
             this.start = this.current
@@ -30,22 +26,22 @@ export class Tokenizer {
     }
 
     private deleteUnnecessarySpaces() {
-        this.deleteWhiteSpaces()
         this.deleteComments()
+        this.deleteWhiteSpaces()
     }
 
     private deleteWhiteSpaces()  {
         this.source = this.source.replace(/\s+/g, '');
     }
     
-    private deleteComments(): string {
-        return this.source.replace(/^\/\/.*$/gm, '');
+    private deleteComments() {
+        this.source = this.source.replace(/^\/\/.*$/gm, '');
     }
     
     private addToken(type: TokenType,  literal: literalType) {
         const text: string = this.source.substring(this.start, this.current)
         this.tokens.push(new Token(type, text, literal))
-}
+    }
 
     private scanToken() {
         const c: string = this.advance();

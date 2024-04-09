@@ -19,10 +19,6 @@ export class Tokenizer {
         return this.source
     }
 
-    public getTokens(): Token[] {
-        return this.tokens
-    }
-
     scanTokens(): Token[] {
         while(!this.isAtEnd()) {
             this.start = this.current

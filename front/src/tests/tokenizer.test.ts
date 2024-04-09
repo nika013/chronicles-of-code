@@ -70,8 +70,8 @@ describe('test Tokenizer source', () => {
       ( ) 
       `
       let tokenizer = new Tokenizer(source)
-      tokenizer.scanTokens()
-      let tokens = tokenizer.getTokens()
+      let tokens = tokenizer.scanTokens()
+
       const expectedTokens = [
         new Token(TokenType.LEFT_PAREN, '(', null),
         new Token(TokenType.RIGHT_PAREN, ')', null),
@@ -86,8 +86,8 @@ describe('test Tokenizer source', () => {
       };
       `
       let tokenizer = new Tokenizer(source)
-      tokenizer.scanTokens()
-      let tokens = tokenizer.getTokens()
+      let tokens = tokenizer.scanTokens()
+
       
       const expectedTokens = [
         new Token(TokenType.LEFT_PAREN, '(', null),
@@ -118,8 +118,8 @@ describe('test Tokenizer source', () => {
       `
 
       let tokenizer = new Tokenizer(source)
-      tokenizer.scanTokens()
-      let tokens = tokenizer.getTokens()
+      let tokens = tokenizer.scanTokens()
+
       const expectedTokens = [
         new Token(TokenType.LEFT_BRACE, '{', null),
         new Token(TokenType.LEFT_PAREN, '(', null),
@@ -140,8 +140,8 @@ describe('test Tokenizer source', () => {
         5 "number"  
       `
       let tokenizer = new Tokenizer(source)
-      tokenizer.scanTokens()
-      let tokens = tokenizer.getTokens()
+      let tokens = tokenizer.scanTokens()
+
       const expectedTokens = [
         new Token(TokenType.NUMBER, '5', 5),
         new Token(TokenType.STRING, `"number"`, "number"),
@@ -161,8 +161,8 @@ describe('test Tokenizer source', () => {
         }
       `
       let tokenizer = new Tokenizer(source)
-      tokenizer.scanTokens()
-      let tokens = tokenizer.getTokens()
+      let tokens = tokenizer.scanTokens()
+
       const expectedTokens = [
         new Token(TokenType.LEFT_BRACE, '{', null),
         new Token(TokenType.NUMBER, '5', 5),
@@ -178,7 +178,9 @@ describe('test Tokenizer source', () => {
     })
 
     // test operators (1-2 characters)
-    
+    // test('', () => {
+
+    // })
     // test keywords
     // test func/var names
   })  

@@ -1,5 +1,6 @@
 import {Expression} from "../Expression";
 import {Token} from "../../Token";
+import {ExpressionVisitor} from "../ExpressionVisitor/ExpressionVisitor";
 
 export class Unary extends Expression {
     operator: Token
@@ -9,5 +10,9 @@ export class Unary extends Expression {
         super();
         this.operator = operator
         this.right = right
+    }
+
+    accept<R>(visitor: ExpressionVisitor<R>): R {
+        return visitor.visitUnaryExpr(this)
     }
 }

@@ -1,13 +1,13 @@
-import {TokenType} from "../Tokenizer/TokenType.ts";
+import {TokenType} from "./TokenType.ts";
+import {LiteralType} from "./literalType";
 
-export type literalType = string | number | boolean | null;
 
 export class Token {
     type: TokenType;
     lexeme: string;
-    literal: literalType;
+    literal: LiteralType;
 
-    constructor(type: TokenType, lexeme: string, literal: literalType) {
+    constructor(type: TokenType, lexeme: string, literal: LiteralType) {
         this.type = type
         this.lexeme = lexeme
         this.literal = literal

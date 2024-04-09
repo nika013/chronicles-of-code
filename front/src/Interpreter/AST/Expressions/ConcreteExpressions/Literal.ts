@@ -1,10 +1,12 @@
 import {Expression} from "../Expression";
 import {ExpressionVisitor} from "../ExpressionVisitor/ExpressionVisitor";
+import {LiteralType} from "../../literalType";
+
+
 
 export class Literal extends Expression {
-    // value should be never but it goes red :(((
-    value: never
-    constructor(value: never) {
+    value: LiteralType
+    constructor(value: LiteralType) {
         super();
         this.value = value
     }

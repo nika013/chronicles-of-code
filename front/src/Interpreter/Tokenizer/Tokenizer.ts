@@ -1,8 +1,9 @@
-import {literalType, Token} from "../AST/Token.ts";
-import {TokenType} from "./TokenType.ts";
+import {Token} from "../AST/Token.ts";
+import {TokenType} from "../AST/TokenType.ts";
 import {keywords} from "./Keywords.ts"
+import {LiteralType} from "../AST/literalType.ts";
 
-export class Tokenizer {
+class Tokenizer  {
     private source: string;
     private tokens: Token[] = []
     private current: integer
@@ -21,7 +22,8 @@ export class Tokenizer {
             this.scanToken()
         }
 
-        // this.tokens.push(new Token(TokenType.EOF, "", ));
+        // maybe this line is written incorrectly
+        this.tokens.push(new Token(TokenType.EOF, "", "" ));
         return this.tokens
     }
 
@@ -38,7 +40,7 @@ export class Tokenizer {
         this.source = this.source.replace(/^\/\/.*$/gm, '');
     }
     
-    private addToken(type: TokenType,  literal: literalType) {
+    private addToken(type: TokenType,  literal: LiteralType) {
         const text: string = this.source.substring(this.start, this.current)
         this.tokens.push(new Token(type, text, literal))
     }
@@ -177,3 +179,6 @@ export class Tokenizer {
         return this.current >= this.source.length
     }
 }
+
+
+export default Tokenizer

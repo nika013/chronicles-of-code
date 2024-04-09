@@ -1,6 +1,6 @@
-import {literalType, Token} from "./Token.ts";
-import {TokenType} from "./TokenType.ts";
-import {keywords} from "./Keywords.ts"
+import { literalType, Token } from "./Token.ts";
+import { TokenType } from "./TokenType.ts";
+import { keywords } from "./Keywords.ts"
 
 export class Tokenizer {
     private source: string;
@@ -17,6 +17,10 @@ export class Tokenizer {
 
     public getSource(): string {
         return this.source
+    }
+
+    public getTokens(): Token[] {
+        return this.tokens
     }
 
     scanTokens(): Token[] {

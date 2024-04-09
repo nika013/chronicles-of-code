@@ -28,7 +28,7 @@ describe('test Token', () => {
   })
 })
 
-describe('test tokenizer', () => {
+describe('test Tokenizer source', () => {
   test('test comments', () => {
     let source = `
     // first comment
@@ -62,4 +62,78 @@ describe('test tokenizer', () => {
     let tokenizer = new Tokenizer(source)
     expect(tokenizer.getSource()).toEqual("რიცხვიერთი=1")
   })
+
+  describe('test Tokenizer list', () => {
+
+    
+    // test basics parens etc
+    test('test basic parens tokens', () => {
+      let source = `
+      ( ) 
+      `
+      let tokenizer = new Tokenizer(source)
+      tokenizer.scanTokens()
+      let tokens = tokenizer.getTokens()
+      const expectedTokens = [
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+      ]
+      expect(tokens).toEqual(expectedTokens);
+    })
+
+    test('test single-chars tokens', () => {
+      let source = `
+      ( ) { } . 
+      { ,
+      };
+      `
+      let tokenizer = new Tokenizer(source)
+      tokenizer.scanTokens()
+      let tokens = tokenizer.getTokens()
+      
+      const expectedTokens = [
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+        new Token(TokenType.DOT, '.', null),
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.COMMA, ',', null),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+        new Token(TokenType.SEMICOLON, ';', null),
+      ]
+      expect(tokens).toEqual(expectedTokens);
+    })
+
+    // test with comments and whitespaces 
+    test('test single char tokens with unnecessary chars', () => {
+      let source = `
+      {
+        (.)
+        (,
+              ;
+
+        // (){}
+
+      }
+
+      `
+      let tokenizer = new Tokenizer(source)
+      tokenizer.scanTokens()
+      let tokens = tokenizer.getTokens()
+      const expectedTokens = [
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.DOT, '.', null),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.COMMA, ',', null),
+        new Token(TokenType.SEMICOLON, ';', null),
+
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+
+      ]
+      expect(tokens).toEqual(expectedTokens);
+    })
+  })  
 })

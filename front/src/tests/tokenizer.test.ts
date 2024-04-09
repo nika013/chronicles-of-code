@@ -177,11 +177,43 @@ describe('test Tokenizer source', () => {
       expect(tokens).toEqual(expectedTokens)
     })
 
-    // test operators (1-2 characters)
-    // test('', () => {
+    test('test operators & 2 char tokens', () => {
+      let source = `
+      {
+        (5 != 6), 100 == 100, 200 >= 100
+        
+      }
+      =
+        !
+        > < <=
+      `
+      let tokenizer = new Tokenizer(source)
+      let tokens = tokenizer.scanTokens()
+      const expectedTokens = [
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.NUMBER, '5', 5),
+        new Token(TokenType.BANG_EQUAL, '!=', null),
+        new Token(TokenType.NUMBER, '6', 6),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.COMMA, ',', null),
+        new Token(TokenType.NUMBER, '100', 100),
+        new Token(TokenType.EQUAL_EQUAL, '==', null),
+        new Token(TokenType.NUMBER, '100', 100),
+        new Token(TokenType.COMMA, ',', null),
+        new Token(TokenType.NUMBER, '200', 200),
+        new Token(TokenType.GREATER_EQUAL, '>=', null),
+        new Token(TokenType.NUMBER, '100', 100),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+        new Token(TokenType.EQUAL, '=', null),
+        new Token(TokenType.BANG, '!', null),
+        new Token(TokenType.GREATER, '>', null),
+        new Token(TokenType.LESS, '<', null),
+        new Token(TokenType.LESS_EQUAL, '<=', null),
+      ]
+      expect(tokens).toEqual(expectedTokens)
+    })
 
-    // })
     // test keywords
-    // test func/var names
   })  
 })

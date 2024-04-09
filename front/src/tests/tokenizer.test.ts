@@ -64,8 +64,6 @@ describe('test Tokenizer source', () => {
   })
 
   describe('test Tokenizer list', () => {
-
-    
     // test basics parens etc
     test('test basic parens tokens', () => {
       let source = `
@@ -78,7 +76,7 @@ describe('test Tokenizer source', () => {
         new Token(TokenType.LEFT_PAREN, '(', null),
         new Token(TokenType.RIGHT_PAREN, ')', null),
       ]
-      expect(tokens).toEqual(expectedTokens);
+      expect(tokens).toEqual(expectedTokens)
     })
 
     test('test single-chars tokens', () => {
@@ -102,7 +100,7 @@ describe('test Tokenizer source', () => {
         new Token(TokenType.RIGHT_BRACE, '}', null),
         new Token(TokenType.SEMICOLON, ';', null),
       ]
-      expect(tokens).toEqual(expectedTokens);
+      expect(tokens).toEqual(expectedTokens)
     })
 
     // test with comments and whitespaces 
@@ -118,6 +116,7 @@ describe('test Tokenizer source', () => {
       }
 
       `
+
       let tokenizer = new Tokenizer(source)
       tokenizer.scanTokens()
       let tokens = tokenizer.getTokens()
@@ -131,9 +130,56 @@ describe('test Tokenizer source', () => {
         new Token(TokenType.SEMICOLON, ';', null),
 
         new Token(TokenType.RIGHT_BRACE, '}', null),
-
       ]
-      expect(tokens).toEqual(expectedTokens);
+      expect(tokens).toEqual(expectedTokens)
     })
+
+    // test literal tokens
+    test('test basic literals', () => {
+      let source = `
+        5 "number"  
+      `
+      let tokenizer = new Tokenizer(source)
+      tokenizer.scanTokens()
+      let tokens = tokenizer.getTokens()
+      const expectedTokens = [
+        new Token(TokenType.NUMBER, '5', 5),
+        new Token(TokenType.STRING, `"number"`, "number"),
+      ]
+      expect(tokens).toEqual(expectedTokens)
+    })
+
+    test('test advanced literals', () => {
+      let source = `
+        { 
+          5, "number" 
+            // no literals
+            120.1
+                -7.13
+              "turnRight"
+            
+        }
+      `
+      let tokenizer = new Tokenizer(source)
+      tokenizer.scanTokens()
+      let tokens = tokenizer.getTokens()
+      const expectedTokens = [
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.NUMBER, '5', 5),
+        new Token(TokenType.COMMA, ',', null),
+        new Token(TokenType.STRING, `"number"`, "number"),
+        new Token(TokenType.NUMBER, '120.1', 120.1),
+        new Token(TokenType.MINUS, '-', null),
+        new Token(TokenType.NUMBER, '7.13', 7.13),
+        new Token(TokenType.STRING, `"turnRight"`, "turnRight"),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+      ]
+      expect(tokens).toEqual(expectedTokens)
+    })
+
+    // test operators (1-2 characters)
+    
+    // test keywords
+    // test func/var names
   })  
 })

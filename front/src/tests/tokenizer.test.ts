@@ -214,6 +214,29 @@ describe('test Tokenizer source', () => {
       expect(tokens).toEqual(expectedTokens)
     })
 
+    // test identifiers
+    test('test identifiers', () => {
+      //         წიქარა.ახტომა()
+      //  რიცხვი ასი = 100
+      let source = `
+      {
+        წინ()
+      }
+      `
+      let tokenizer = new Tokenizer(source)
+      let tokens = tokenizer.scanTokens()
+      const expectedTokens = [
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.IDENTIFIER, 'წინ', null),
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        // new Token(TokenType.EQUAL, '=', null),
+        // new Token(TokenType.NUMBER, '100', 100),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+      ]
+      expect(tokens).toEqual(expectedTokens)
+    })
+
     // test keywords
   })  
 })

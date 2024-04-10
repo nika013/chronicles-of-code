@@ -214,24 +214,44 @@ describe('test Tokenizer source', () => {
       expect(tokens).toEqual(expectedTokens)
     })
 
-    // test identifiers
     test('test identifiers', () => {
       //         წიქარა.ახტომა()
       //  რიცხვი ასი = 100
       let source = `
       {
-        წინ()
+        რიცხვი ჯამში = 10
+        გაიმეორე ჯამში {
+            წინ()
+            თუ ჭეშმარიტი { 
+                წიქარა.ახტომა() 
+            }
+        }
       }
       `
       let tokenizer = new Tokenizer(source)
       let tokens = tokenizer.scanTokens()
       const expectedTokens = [
         new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.IDENTIFIER, 'რიცხვი', null),
+        new Token(TokenType.IDENTIFIER, 'ჯამში', null),
+        new Token(TokenType.EQUAL, '=', null),
+        new Token(TokenType.NUMBER, '10', 10),
+        new Token(TokenType.FOR, 'გაიმეორე', null),
+        new Token(TokenType.IDENTIFIER, 'ჯამში', null),
+        new Token(TokenType.LEFT_BRACE, '{', null),
         new Token(TokenType.IDENTIFIER, 'წინ', null),
         new Token(TokenType.LEFT_PAREN, '(', null),
-        // new Token(TokenType.EQUAL, '=', null),
-        // new Token(TokenType.NUMBER, '100', 100),
         new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.IF, 'თუ', null),
+        new Token(TokenType.TRUE, 'ჭეშმარიტი', null),
+        new Token(TokenType.LEFT_BRACE, '{', null),
+        new Token(TokenType.IDENTIFIER, 'წიქარა', null),
+        new Token(TokenType.DOT, '.', null),
+        new Token(TokenType.IDENTIFIER, 'ახტომა', null),
+        new Token(TokenType.LEFT_PAREN, '(', null),
+        new Token(TokenType.RIGHT_PAREN, ')', null),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
+        new Token(TokenType.RIGHT_BRACE, '}', null),
         new Token(TokenType.RIGHT_BRACE, '}', null),
       ]
       expect(tokens).toEqual(expectedTokens)

@@ -1,6 +1,6 @@
-import {literalType, Token} from "./Token.ts";
-import {TokenType} from "./TokenType.ts";
-import {keywords} from "./Keywords.ts"
+import { literalType, Token } from "./Token.ts";
+import { TokenType } from "./TokenType.ts";
+import { keywords } from "./Keywords.ts"
 
 export class Tokenizer {
     private source: string;
@@ -13,6 +13,10 @@ export class Tokenizer {
         this.current = 0
         this.start = 0
         this.deleteUnnecessarySpaces()
+    }
+
+    public getSource(): string {
+        return this.source
     }
 
     scanTokens(): Token[] {
@@ -35,7 +39,7 @@ export class Tokenizer {
     }
     
     private deleteComments() {
-        this.source = this.source.replace(/^\/\/.*$/gm, '');
+        this.source = this.source.replace(/^\s*\/\/.*$/gm, '');
     }
     
     private addToken(type: TokenType,  literal: literalType) {
@@ -92,13 +96,14 @@ export class Tokenizer {
         return this.isAlpha(c) || this.isDigit(c);
     }
 
-
     private doIdentifier() {
+        let text: string = ""
         while(this.isAlphaNumeric(this.peek())){
             this.advance()
+            text = this.source.substring(this.start, this.current)
+            if (keywords.get(text) != undefined) break
         }
-        const text: string = this.source.substring(this.start, this.current);
-
+        
         let type = keywords.get(text)
         if (type == undefined) {
             type = TokenType.IDENTIFIER
@@ -108,9 +113,13 @@ export class Tokenizer {
     
     private isAlpha(c: string): boolean {
         return (c >= 'a' && c <= 'z') ||
-            (c >= 'A' && c <= 'Z') ||
-            c == '_';
+               (c >= 'A' && c <= 'Z') ||
+               c === '_' ||
+               (c >= '\u10D0' && c <= '\u10FF') || // Georgian
+               (c >= '\u1C90' && c <= '\u1CBF') || // Georgian Supplement
+               (c >= '\u2D00' && c <= '\u2D2F');   // Georgian Extended
     }
+    
     
     private isDigit(c: string): boolean {
         return c >= '0' && c <= '9'

@@ -1,5 +1,5 @@
 import {TokenType} from "./TokenType.ts";
-import {LiteralType} from "./literalType";
+import {LiteralType} from "./literalType.ts";
 
 
 export class Token {

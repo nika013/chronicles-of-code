@@ -1,6 +1,6 @@
 import {Expression} from "../Expression";
 import {ExpressionVisitor} from "../ExpressionVisitor/ExpressionVisitor";
-import {LiteralType} from "../../literalType";
+import {LiteralType} from "../../../literalType.ts";
 
 
 

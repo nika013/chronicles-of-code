@@ -1,6 +1,6 @@
 
 
-import {Token} from "../Token";
+import {Token} from "../../Token.ts";
 import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor";
  
 export abstract class Expression {

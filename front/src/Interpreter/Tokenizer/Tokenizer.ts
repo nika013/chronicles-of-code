@@ -1,9 +1,9 @@
-import {Token} from "../AST/Token.ts";
-import {TokenType} from "../AST/TokenType.ts";
+import {Token} from "../Token.ts";
+import {TokenType} from "../TokenType.ts";
 import {keywords} from "./Keywords.ts"
-import {LiteralType} from "../AST/literalType.ts";
+import {LiteralType} from "../literalType.ts";
 
-class Tokenizer  {
+export class Tokenizer  {
     private source: string;
     private tokens: Token[] = []
     private current: integer
@@ -37,7 +37,7 @@ class Tokenizer  {
     }
     
     private deleteComments() {
-        this.source = this.source.replace(/^\/\/.*$/gm, '');
+        this.source = this.source.replace(/^\s*\/\/.*$/gm, '');
     }
     
     private addToken(type: TokenType,  literal: LiteralType) {
@@ -178,7 +178,10 @@ class Tokenizer  {
     private isAtEnd(): boolean {
         return this.current >= this.source.length
     }
+
+    public getSource(): string {
+        return this.source
+    }
 }
 
 
-export default Tokenizer

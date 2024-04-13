@@ -29,6 +29,9 @@ export class ExpressionParser {
         this.tokens = tokens
     }
     
+    public parse(): Expression {
+        return this.expression();
+    }
     // expression     → equality ;
     private expression(): Expression{
         return this.equality()
@@ -117,10 +120,12 @@ export class ExpressionParser {
         
         if(this.match(TokenType.LEFT_PAREN)) {
             const expression: Expression = this.expression()
+
             this.consume(TokenType.RIGHT_PAREN, ") აკლია")
             return new Grouping(expression)
         }
         
+        throw new Error("didnt return kind of value, we're here: TokenType.SOMETHINGS_WRONG")
         //never should come here, hopefully :D
         return new Literal(TokenType.SOMETHINGS_WRONG)
     }
@@ -128,10 +133,10 @@ export class ExpressionParser {
     private consume(type: TokenType, errorMessage: string): Token {
         if(this.check(type)) return this.advance()
         
-        throw new Error(errorMessage)
+        throw new Error(errorMessage + this.previous().type)
     }
 
-        // checks if next Token matches any of the TokenType that is given to it
+    // checks if next Token matches any of the TokenType that is given to it
     // if it does, current increments
     private match(...types: TokenType[]): boolean {
      for (const type of types) {
@@ -143,6 +148,7 @@ export class ExpressionParser {
      return false
     }
  
+    // doesnt move the current
     private check(type: TokenType): boolean {
         if (this.isAtEnd()) {
             return false

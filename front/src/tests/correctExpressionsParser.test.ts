@@ -28,7 +28,7 @@ describe('test simple literal expressions', () => {
         addEOF(tokens)
         
         const parser = new ExpressionParser(tokens)
-        const expression: Expression = parser.parse()
+        const expression: Expression | null= parser.parse()
         
         expect(expression).toBeInstanceOf(Literal)
         expect((<Literal>expression).value).toBe(42)
@@ -41,7 +41,7 @@ describe('test simple literal expressions', () => {
         addEOF(tokens)
         
         const parser = new ExpressionParser(tokens)
-        const expression: Expression = parser.parse()
+        const expression: Expression | null= parser.parse()
         expect(expression).toBeInstanceOf(Literal)
         expect((<Literal>expression).value).toBe("Mari Rocks")
     })
@@ -54,7 +54,7 @@ describe('test simple literal expressions', () => {
         addEOF(tokens)
 
         const parser = new ExpressionParser(tokens)
-        let expression: Expression = parser.parse()
+        let expression: Expression | null= parser.parse()
         expect(expression).toBeInstanceOf(Literal)
         expect((<Literal>expression).value).toBe(true)
 
@@ -64,7 +64,7 @@ describe('test simple literal expressions', () => {
     })
 })
 
-function parseTokens(tokens: Token[]): Expression {
+function parseTokens(tokens: Token[]): Expression{
     addEOF(tokens); // Ensure EOF is always added
     const parser = new ExpressionParser(tokens);
     return parser.parse();
@@ -98,7 +98,7 @@ describe("test simple literals in parentheses",  () => {
             createToken(TokenType.RIGHT_PAREN, ")", null),
         ]
 
-        let expression: Expression = parseTokens(tokens)
+        let expression: Expression | null= parseTokens(tokens)
 
         expect(expression).toBeInstanceOf(Grouping)
         expect((<Literal>(<Grouping>expression).expression).value).toBe(17)
@@ -210,7 +210,7 @@ function createNumberToken(value: number): Token {
     return createToken(TokenType.NUMBER, value.toString(), value);
 }
 
-function parseExpression(tokens: Token[]): Expression {
+function parseExpression(tokens: Token[]): Expression | null{
     const parser = new ExpressionParser(tokens);
     return parser.parse();
 }
@@ -227,7 +227,7 @@ describe('test simple term', () => {
         addEOF(tokens)
 
 
-        const expression: Expression = parseExpression(tokens);
+        const expression: Expression | null= parseExpression(tokens);
 
         expect(expression).toBeInstanceOf(Binary);
         expect((<Binary>expression).operator.lexeme).toBe('+');
@@ -256,7 +256,7 @@ describe('complex term expressions', () => {
         ];
         
         addEOF(tokens)
-        const expression: Expression = parseExpression(tokens);
+        const expression: Expression | null= parseExpression(tokens);
 
         expect(expression).toBeInstanceOf(Binary);
         const topLevelBinary = expression as Binary;

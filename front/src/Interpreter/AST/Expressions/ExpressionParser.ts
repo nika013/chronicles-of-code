@@ -20,18 +20,87 @@ import {Binary} from "./ConcreteExpressions/Binary.ts";
 import {Unary} from "./ConcreteExpressions/Unary.ts";
 import {Literal} from "./ConcreteExpressions/Literal.ts";
 import {Grouping} from "./ConcreteExpressions/Grouping.ts";
+import {ParseError} from "../ParseError.ts";
+import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor.ts";
+
+export class ErrorExpression implements Expression {
+    constructor(public message: string, public line: number) {}
+
+    left: Expression;
+    operator: Token;
+    right: Expression;
+
+    // ! this is wrong, temporary implementation
+    accept<R>(visitor: ExpressionVisitor<R>): R {
+        return visitor.visitBinaryExpr(this);
+    }
+}
 
 export class ExpressionParser {
     private tokens: Token[]
     private current: number = 0
+    // private hasError: boolean = false
 
     constructor(tokens: Token[]) {
         this.tokens = tokens
     }
-    
+
     public parse(): Expression {
-        return this.expression();
+        try {
+            return this.expression();
+        } catch (error) {
+            if (error instanceof ParseError) {
+                this.handleError(error);
+                // this.synchronize()
+                // Return an error-specific expression with error details
+                return new ErrorExpression(error.message, this.previous().line);
+            } else {
+                throw error;
+            }
+        }
     }
+
+    private handleError(error: ParseError): void {
+        console.error("Error parsing at token", this.previous().lexeme, "on line", this.previous().line, ":", error.message);
+        // Additional error handling or logging can be implemented here
+    }
+
+    //
+    // private synchronize(): void {
+    //     this.advance(); // Skip the erroneous token that caused the error
+    //
+    //     while (!this.isAtEnd()) {
+    //         if (this.previous().type === TokenType.SEMICOLON) {
+    //             // A semicolon usually means the end of a statement.
+    //             return; // Safe point to continue parsing
+    //         }
+    //
+    //         // Check if the next token starts a new statement or structure.
+    //         switch (this.peek().type) {
+    //             case TokenType.IF:
+    //             case TokenType.ELSE:
+    //             case TokenType.FOR:
+    //             case TokenType.WHILE:
+    //             case TokenType.TRUE:   // Considering control keywords and booleans might not be ideal for recovery points,
+    //             case TokenType.FALSE:  // but depending on your language's structure, these might imply logical starts or breaks.
+    //                 // These keywords start new blocks or statements, making them good recovery points.
+    //                 return;
+    //             default:
+    //                 // If the current token is not a starting point for a new block or a semicolon,
+    //                 // continue to the next token.
+    //                 this.advance();
+    //                 break;
+    //         }
+    //     }
+    // }
+
+
+    private error(token: Token, message: string): ParseError {
+        console.error(`Error at '${token.lexeme}' (${token.line}): ${message}`);
+        // this.hasError = true;
+        return new ParseError(message);
+    }
+    
     // expression     → equality ;
     private expression(): Expression{
         return this.equality()
@@ -133,8 +202,10 @@ export class ExpressionParser {
     private consume(type: TokenType, errorMessage: string): Token {
         if(this.check(type)) return this.advance()
         
-        throw new Error(errorMessage + this.previous().type)
+        throw this.error(this.peek(), errorMessage)
     }
+    
+    
 
     // checks if next Token matches any of the TokenType that is given to it
     // if it does, current increments
@@ -148,7 +219,7 @@ export class ExpressionParser {
      return false
     }
  
-    // doesnt move the current
+    // doesn't move the current
     private check(type: TokenType): boolean {
         if (this.isAtEnd()) {
             return false
@@ -172,10 +243,12 @@ export class ExpressionParser {
     
     // consumes the current token and returns it
     private advance(): Token {
-        // TO DO: what should happen, when next is EOF?
-        const nextToken: Token = this.peek()
-        this.current++
-        return nextToken
+        if (this.isAtEnd()) throw new ParseError("Attempt to advance past end of input.");
+        return this.tokens[this.current++];
+
+        // const nextToken: Token = this.peek()
+        // this.current++
+        // return nextToken
     }
 }
 

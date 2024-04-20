@@ -25,11 +25,16 @@
         "build": "vite build --config vite/config.prod.mjs"
     },
     "dependencies": {
+        "@codemirror/basic-setup": "^0.20.0",
+        "codemirror": "^5.65.16",
+        "draft-js": "^0.11.7",
         "phaser": "^3.80.1",
         "react": "^18.2.0",
+        "react-codemirror2": "^8.0.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
+        "@types/draft-js": "^0.11.18",
         "@types/react": "^18.2.55",
         "@types/react-dom": "^18.2.19",
         "@typescript-eslint/eslint-plugin": "^7.1.0",

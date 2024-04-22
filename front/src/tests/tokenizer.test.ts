@@ -36,39 +36,39 @@ describe('test Token', () => {
 
 
 describe('test Tokenizer source', () => {
-  test('test comments', () => {
-    const source = `
-    // first comment
-// second comment
-    ///////////////////
-    // daspojdaslkdnqwkndslmadls ///
-    `
-    const tokenizer = new Tokenizer(source)
-    expect(tokenizer.getSource()).toEqual("")
-  })
+//   test('test comments', () => {
+//     const source = `
+//     // first comment
+// // second comment
+//     ///////////////////
+//     // daspojdaslkdnqwkndslmadls ///
+//     `
+//     const tokenizer = new Tokenizer(source)
+//     expect(tokenizer.getSource()).toEqual("")
+//   })
 
-  test('test spaces', () => {
-    const source = `
+  // test('test spaces', () => {
+  //   const source = `
+  //
+  //             const name = 1
+  //
+  //   `
+  //   const tokenizer = new Tokenizer(source)
+  //   expect(tokenizer.getSource()).toEqual("constname=1")
+  // })
 
-              const name = 1
-
-    `
-    const tokenizer = new Tokenizer(source)
-    expect(tokenizer.getSource()).toEqual("constname=1")
-  })
-
-  test('test comments and spaces', () => {
-    const source = `
-// first comment
-        // second comment
- ///////////////////
-    // daspojdaslkdnqwkndslmadls //
-  რიცხვი ერთი = 1
-
-` 
-    const tokenizer = new Tokenizer(source)
-    expect(tokenizer.getSource()).toEqual("რიცხვიერთი=1")
-  })
+//   test('test comments and spaces', () => {
+//     const source = `
+// // first comment
+//         // second comment
+//  ///////////////////
+//     // daspojdaslkdnqwkndslmadls //
+//   რიცხვი ერთი = 1
+//
+// ` 
+//     const tokenizer = new Tokenizer(source)
+//     expect(tokenizer.getSource()).toEqual("რიცხვიერთი=1")
+//   })
 
   describe('test Tokenizer list', () => {
     // test basics parens etc
@@ -235,3 +235,70 @@ describe('test Tokenizer source', () => {
     // test keywords
   })  
 })
+
+describe('Logical Operators Tokenization', () => {
+    test('tokenizes logical AND (და)', () => {
+        const source = "ჭეშმარიტი და მცდარი";
+        const tokenizer = new Tokenizer(source);
+        const tokens = tokenizer.scanTokens();
+
+        const expectedTokens = [
+            new Token(TokenType.TRUE, "ჭეშმარიტი", true),
+            new Token(TokenType.AND, "და", "და"),
+            new Token(TokenType.FALSE, "მცდარი", false),
+        ];
+        addEOF(expectedTokens);
+
+        expect(tokens).toEqual(expectedTokens);
+    });
+
+    test('tokenizes logical OR (ან)', () => {
+        const source = "ჭეშმარიტი ან მცდარი";
+        const tokenizer = new Tokenizer(source);
+        const tokens = tokenizer.scanTokens();
+
+        const expectedTokens = [
+            new Token(TokenType.TRUE, "ჭეშმარიტი", true),
+            new Token(TokenType.OR, "ან", "ან"),
+            new Token(TokenType.FALSE, "მცდარი", false),
+        ];
+        addEOF(expectedTokens);
+
+        expect(tokens).toEqual(expectedTokens);
+    });
+});
+
+describe('test Tokenizer for complex expressions with logical operators', () => {
+    test('tokenize expression with numbers, logical and comparison operators', () => {
+        const source = '(5 >= 5) და (3 + 2 == 5) ან (10 != 2 * 5)';
+        const tokenizer = new Tokenizer(source);
+        const tokens = tokenizer.scanTokens();
+
+        const expectedTokens = [
+            new Token(TokenType.LEFT_PAREN, '(', null),
+            new Token(TokenType.NUMBER, '5', 5),
+            new Token(TokenType.GREATER_EQUAL, '>=', null),
+            new Token(TokenType.NUMBER, '5', 5),
+            new Token(TokenType.RIGHT_PAREN, ')', null),
+            new Token(TokenType.AND, 'და', 'და'),
+            new Token(TokenType.LEFT_PAREN, '(', null),
+            new Token(TokenType.NUMBER, '3', 3),
+            new Token(TokenType.PLUS, '+', null),
+            new Token(TokenType.NUMBER, '2', 2),
+            new Token(TokenType.EQUAL_EQUAL, '==', null),
+            new Token(TokenType.NUMBER, '5', 5),
+            new Token(TokenType.RIGHT_PAREN, ')', null),
+            new Token(TokenType.OR, 'ან', 'ან'),
+            new Token(TokenType.LEFT_PAREN, '(', null),
+            new Token(TokenType.NUMBER, '10', 10),
+            new Token(TokenType.BANG_EQUAL, '!=', null),
+            new Token(TokenType.NUMBER, '2', 2),
+            new Token(TokenType.STAR, '*', null),
+            new Token(TokenType.NUMBER, '5', 5),
+            new Token(TokenType.RIGHT_PAREN, ')', null),
+            new Token(TokenType.EOF, '', '')
+        ];
+
+        expect(tokens).toEqual(expectedTokens);
+    });
+});

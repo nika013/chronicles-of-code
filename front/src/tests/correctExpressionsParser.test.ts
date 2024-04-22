@@ -621,3 +621,102 @@ describe('complex expressions integration tests', () => {
         expect(innerExpression.operator.type).toBe(TokenType.MINUS);
     });
 })
+
+
+describe('Logical Operator Parsing Tests', () => {
+    test('parses logical AND (და)', () => {
+        const tokens: Token[] = [
+            new Token(TokenType.TRUE, "ჭეშმარიტი", true),
+            new Token(TokenType.AND, "და", null),
+            new Token(TokenType.FALSE, "მცდარი", false),
+            new Token(TokenType.EOF, "", null)
+        ];
+
+        const expression = parseExpression(tokens);
+
+        expect(expression).toBeInstanceOf(Binary);
+        const binaryExpr = expression as Binary;
+        expect(binaryExpr.operator.type).toBe(TokenType.AND);
+        expect((binaryExpr.left as Literal).value).toBe(true);
+        expect((binaryExpr.right as Literal).value).toBe(false);
+    });
+
+    test('parses logical OR (ან)', () => {
+        const tokens: Token[] = [
+            new Token(TokenType.TRUE, "ჭეშმარიტი", true),
+            new Token(TokenType.OR, "ან", null),
+            new Token(TokenType.TRUE, "ჭეშმარიტი", true),
+            new Token(TokenType.EOF, "", null)
+        ];
+
+        const expression = parseExpression(tokens);
+
+        expect(expression).toBeInstanceOf(Binary);
+        const binaryExpr = expression as Binary;
+        expect(binaryExpr.operator.type).toBe(TokenType.OR);
+        expect((binaryExpr.left as Literal).value).toBe(true);
+        expect((binaryExpr.right as Literal).value).toBe(true);
+    });
+});
+
+
+//
+// describe('test ExpressionParser for logical expressions', () => {
+//     test('parse complex logical and comparison expression', () => {
+//         const tokens = [
+//             new Token(TokenType.LEFT_PAREN, '(', null),
+//             new Token(TokenType.NUMBER, '5', 5),
+//             new Token(TokenType.GREATER_EQUAL, '>=', null),
+//             new Token(TokenType.NUMBER, '5', 5),
+//             new Token(TokenType.RIGHT_PAREN, ')', null),
+//             new Token(TokenType.IDENTIFIER, 'და', null),
+//             new Token(TokenType.LEFT_PAREN, '(', null),
+//             new Token(TokenType.NUMBER, '3', 3),
+//             new Token(TokenType.PLUS, '+', null),
+//             new Token(TokenType.NUMBER, '2', 2),
+//             new Token(TokenType.EQUAL_EQUAL, '==', null),
+//             new Token(TokenType.NUMBER, '5', 5),
+//             new Token(TokenType.RIGHT_PAREN, ')', null),
+//             new Token(TokenType.IDENTIFIER, 'ან', null),
+//             new Token(TokenType.LEFT_PAREN, '(', null),
+//             new Token(TokenType.NUMBER, '10', 10),
+//             new Token(TokenType.BANG_EQUAL, '!=', null),
+//             new Token(TokenType.NUMBER, '2', 2),
+//             new Token(TokenType.STAR, '*', null),
+//             new Token(TokenType.NUMBER, '5', 5),
+//             new Token(TokenType.RIGHT_PAREN, ')', null),
+//             new Token(TokenType.EOF, '', null)
+//         ];
+//
+//         const parser = new ExpressionParser(tokens);
+//         const expression = parser.parse();
+//
+//         // expect(expression).toBeInstanceOf(Binary);
+//         const topLevelOr = expression as Binary;
+//         expect(topLevelOr.operator.type).toBe(TokenType.IDENTIFIER);
+//         expect(topLevelOr.operator.lexeme).toBe('ან');
+//
+//         // Test the left-hand side (AND operation)
+//         const leftAnd = topLevelOr.left as Binary;
+//         expect(leftAnd.operator.lexeme).toBe('და');
+//         expect(leftAnd.left).toBeInstanceOf(Grouping);
+//         expect(leftAnd.right).toBeInstanceOf(Grouping);
+//
+//         // Test the right-hand side, simple comparison
+//         const rightComparison = topLevelOr.right as Grouping;
+//         expect(rightComparison.expression).toBeInstanceOf(Binary);
+//
+//         // Dive into the groups to assert their internal structures
+//         const leftGroupExpression = (leftAnd.left as Grouping).expression as Binary;
+//         expect(leftGroupExpression.left).toBeInstanceOf(Literal);
+//         expect(leftGroupExpression.right).toBeInstanceOf(Literal);
+//         expect(leftGroupExpression.operator.type).toBe(TokenType.GREATER_EQUAL);
+//
+//         const rightGroupExpression = (leftAnd.right as Grouping).expression as Binary;
+//         expect(rightGroupExpression.left).toBeInstanceOf(Binary);
+//         expect(rightGroupExpression.right).toBeInstanceOf(Literal);
+//         expect(rightGroupExpression.operator.type).toBe(TokenType.EQUAL_EQUAL);
+//
+//         // Optionally continue to assert on nested Binary structures...
+//     });
+// });

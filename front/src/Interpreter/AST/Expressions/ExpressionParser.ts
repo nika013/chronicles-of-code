@@ -23,6 +23,30 @@ import {Grouping} from "./ConcreteExpressions/Grouping.ts";
 import {ParseError} from "../ParseError.ts";
 import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor.ts";
 
+/*
+    // equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+
+SOME INFO:
+    Context-Free Grammar:
+    expression     → equality ;
+    equality       → logical_or ( ( "!=" | "==" ) logical_or )* ;
+    logical_or     → logical_and ( "||" logical_and )* ;
+    logical_and    → comparison ( "&&" comparison )* ;
+    comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+    term           → factor ( ( "-" | "+" ) factor )* ;
+    factor         → unary ( ( "/" | "*" ) unary )* ;
+    unary          → ( "!" | "-" ) unary | primary ;
+    primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+
+
+       **Precedence Management**
+        -Arithmetic operations
+        -Comparison operations
+        -Logical AND operations
+        -Logical OR operations
+        -equality operations
+
+ */
 export class ErrorExpression implements Expression {
     constructor(public message: string, public line: number) {}
 
@@ -42,7 +66,11 @@ export class ExpressionParser {
     // private hasError: boolean = false
 
     constructor(tokens: Token[]) {
+        console.log(tokens)
         this.tokens = tokens
+        // tokens.pop()
+        // this.tokens = tokens
+        // console.log(this.tokens)
     }
 
     public parse(): Expression {
@@ -106,25 +134,54 @@ export class ExpressionParser {
         return this.equality()
     }
 
-    // equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+    // equality       → logical_or ( ( "!=" | "==" ) logical_or )* ;
     private equality(): Expression {
-        let expression: Expression = this.comparison()
-        
+        let expression: Expression = this.logical_or()
+        console.log("in parser: expression left: " + expression)
         while(this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
             // previous because when checking the match, we consumed the operator
             const operator: Token = this.previous()
-            const right: Expression = this.comparison()
+            const right: Expression = this.logical_or()
             expression = new Binary(expression, operator, right)
         }
         
         return expression;
+    }
+//
+//     **Precedence Management**
+// -Arithmetic operations
+// -Comparison operations
+// -Logical AND operations
+// -Logical OR operations
+// -equality operations
+
+    // logical_or     → logical_and ( "||" logical_and )* ;
+    private logical_or(): Expression {
+        let expr = this.logical_and();
+        while (this.match(TokenType.OR)) {
+            const operator = this.previous();
+            const right = this.logical_and();
+            expr = new Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
+    // logical_and    → comparison ( "&&" comparison )* ;
+    private logical_and(): Expression {
+        let expr = this.comparison();
+        while (this.match(TokenType.AND)) {
+            const operator = this.previous();
+            const right = this.comparison();
+            expr = new Binary(expr, operator, right);
+        }
+        return expr;
     }
     
     private comparison(): Expression {
         let expression: Expression = this.term()
         
         while(this.match(TokenType.GREATER, TokenType.GREATER_EQUAL,
-            TokenType.LESS, TokenType.LESS_EQUAL )) {
+            TokenType.LESS, TokenType.LESS_EQUAL,  )) {
             // previous used because when checking the match, we consumed the operator
             const operator: Token = this.previous()
             const term: Expression = this.term()
@@ -194,7 +251,7 @@ export class ExpressionParser {
             return new Grouping(expression)
         }
         
-        throw new Error("didnt return kind of value, we're here: TokenType.SOMETHINGS_WRONG")
+        throw new Error( " we're here: TokenType.SOMETHINGS_WRONG")
         //never should come here, hopefully :D
         return new Literal(TokenType.SOMETHINGS_WRONG)
     }
@@ -224,6 +281,8 @@ export class ExpressionParser {
         if (this.isAtEnd()) {
             return false
         }   
+        if (this.peek().type === undefined)
+            throw new Error(this.peek() + " type undefined line 233")
         return this.peek().type === type
     }
     

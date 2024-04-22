@@ -29,12 +29,12 @@ export class Tokenizer  {
 
     private deleteUnnecessarySpaces() {
         this.deleteComments()
-        this.deleteWhiteSpaces()
+        // this.deleteWhiteSpaces()
     }
-
-    private deleteWhiteSpaces()  {
-        this.source = this.source.replace(/\s+/g, '');
-    }
+    //
+    // private deleteWhiteSpaces()  {
+    //     this.source = this.source.replace(/\s+/g, '');
+    // }
     
     private deleteComments() {
         this.source = this.source.replace(/^\s*\/\/.*$/gm, '');
@@ -48,6 +48,7 @@ export class Tokenizer  {
     private scanToken() {
         const c: string = this.advance();
         switch (c) {
+            case ' ': break;
             case '(': this.addToken(TokenType.LEFT_PAREN, null); break;
             case ')': this.addToken(TokenType.RIGHT_PAREN, null); break;
             case '{': this.addToken(TokenType.LEFT_BRACE, null); break;
@@ -58,7 +59,7 @@ export class Tokenizer  {
             case '+': this.addToken(TokenType.PLUS, null); break;
             case ';': this.addToken(TokenType.SEMICOLON, null); break;
             case '*': this.addToken(TokenType.STAR, null); break;
-
+            
             case '!':
                 this.addToken(this.match('=') ? TokenType.BANG_EQUAL : TokenType.BANG, null);
                 break;
@@ -100,16 +101,31 @@ export class Tokenizer  {
             this.advance()
         }
         const text: string = this.source.substring(this.start, this.current);
+        const type = keywords.get(text) || TokenType.IDENTIFIER;  // Fallback to IDENTIFIER if not found
 
-        let type = keywords.get(text)
-        if (type == undefined) {
-            type = TokenType.IDENTIFIER
+        switch (type) {
+            case TokenType.TRUE:
+                this.addKeyWordToken(TokenType.TRUE, text, true)
+                return
+            case TokenType.FALSE:
+                this.addKeyWordToken(TokenType.FALSE, text, false)
+                return
+            default:
+                this.addToken(type, text)
+                return
         }
-        this.addToken(type, null)
     }
     
+    
+    
+    private addKeyWordToken(type: TokenType, text: string, literal: LiteralType) {
+        // const text: string = this.source.substring(this.start, this.current)
+        this.tokens.push(new Token(type, text, literal))
+    }
+    
+    
     private isAlpha(c: string): boolean {
-        return (c >= 'a' && c <= 'z') ||
+        return (c >= 'ა' && c <= 'ჰ') || (c >= 'a' && c <= 'z') ||
             (c >= 'A' && c <= 'Z') ||
             c == '_';
     }

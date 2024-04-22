@@ -1,12 +1,11 @@
-import {IWhileStatement} from "../Interfaces/IWhileStatement.ts";
+import { Statement } from "../Interfaces/Statement.ts";
+import { StatementContainer } from "./StatementContainer.ts";
+import { Visitor } from "../Interfaces/Visitor.ts";
 
-export class WhileStatement implements IWhileStatement {
+export class WhileStatement extends StatementContainer implements Statement {
     
-    execute(): boolean {
-        return false;
+    
+    accept(visitor: Visitor): void {
+        visitor.doWhileStatement(this)
     }
-    
-    // while(IntegerConstant) {
-    //     statement.execute()
-    // }
 }

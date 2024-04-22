@@ -1,6 +1,7 @@
-import {IFuncStatement} from "../Interfaces/IFuncStatement.ts";
+import { Statement } from "../Interfaces/Statement";
 
-export class FuncStatement implements IFuncStatement {
+
+export class FuncStatement implements Statement {
     execute(): boolean {
         return false;
     }

@@ -1,7 +1,10 @@
-import {IIfStatement} from "../Interfaces/IIfStatement.ts";
+import { Statement } from "../Interfaces/Statement.ts";
+import { StatementContainer } from "./StatementContainer.ts";
+import { Visitor } from "../Interfaces/Visitor.ts";
 
-export class IfStatement implements IIfStatement {
-    execute(): boolean {
-        return false;
+export class IfStatement extends StatementContainer implements Statement {
+
+    accept(visitor: Visitor): void {
+        visitor.doIfStatement(this)
     }
 }

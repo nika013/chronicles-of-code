@@ -457,38 +457,7 @@ describe('equality expressions', () => {
 
 
 describe('complex equality expressions', () => {
-    test('parses nested equality and comparison', () => {
-        // Testing for an expression like: 5 > 3 == 2 < 4
-        const tokens = [
-            createNumberToken(5),
-            createToken(TokenType.GREATER, ">", null),
-            createNumberToken(3),
-            createToken(TokenType.EQUAL_EQUAL, "==", null),
-            createNumberToken(2),
-            createToken(TokenType.LESS, "<", null),
-            createNumberToken(4),
-            createToken(TokenType.EOF, "", null)
-        ]
-
-        const expression = parseExpression(tokens)
-
-        expect(expression).toBeInstanceOf(Binary)
-        const topBinaryExpr = expression as Binary
-        expect(topBinaryExpr.operator.type).toBe(TokenType.EQUAL_EQUAL)
-
-        expect(topBinaryExpr.left).toBeInstanceOf(Binary)
-        const leftBinaryExpr = topBinaryExpr.left as Binary
-        expect(leftBinaryExpr.operator.type).toBe(TokenType.GREATER)
-        expect((leftBinaryExpr.left as Literal).value).toBe(5)
-        expect((leftBinaryExpr.right as Literal).value).toBe(3)
-
-        expect(topBinaryExpr.right).toBeInstanceOf(Binary)
-        const rightBinaryExpr = topBinaryExpr.right as Binary
-        expect(rightBinaryExpr.operator.type).toBe(TokenType.LESS)
-        expect((rightBinaryExpr.left as Literal).value).toBe(2)
-        expect((rightBinaryExpr.right as Literal).value).toBe(4)
-    })
-
+  
     test('parses mixed equality and grouping', () => {
         // Testing for an expression like: (5 != 3) == (2 > 1)
         const tokens = [

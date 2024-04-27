@@ -41,10 +41,9 @@ SOME INFO:
 
        **Precedence Management**
         -Arithmetic operations
-        -Comparison operations
+        -Comparison/equality operations
         -Logical AND operations
         -Logical OR operations
-        -equality operations
 
  */
 export class ErrorExpression implements Expression {
@@ -131,22 +130,10 @@ export class ExpressionParser {
     
     // expression     → equality ;
     private expression(): Expression{
-        return this.equality()
+        return this.logical_or()
     }
 
-    // equality       → logical_or ( ( "!=" | "==" ) logical_or )* ;
-    private equality(): Expression {
-        let expression: Expression = this.logical_or()
-        console.log("in parser: expression left: " + expression)
-        while(this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
-            // previous because when checking the match, we consumed the operator
-            const operator: Token = this.previous()
-            const right: Expression = this.logical_or()
-            expression = new Binary(expression, operator, right)
-        }
-        
-        return expression;
-    }
+
 //
 //     **Precedence Management**
 // -Arithmetic operations
@@ -181,7 +168,7 @@ export class ExpressionParser {
         let expression: Expression = this.term()
         
         while(this.match(TokenType.GREATER, TokenType.GREATER_EQUAL,
-            TokenType.LESS, TokenType.LESS_EQUAL,  )) {
+            TokenType.LESS, TokenType.LESS_EQUAL, TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL )) {
             // previous used because when checking the match, we consumed the operator
             const operator: Token = this.previous()
             const term: Expression = this.term()

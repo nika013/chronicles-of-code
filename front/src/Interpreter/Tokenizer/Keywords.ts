@@ -10,7 +10,7 @@ export const keywords: Map<string, TokenType> = new Map([
     ["თუ", TokenType.IF],
     ["ან", TokenType.OR],
     ["რიცხვი", TokenType.NUMBER],
-    ["სიტყვა", TokenType.STRING],
+    ["ტექსტი", TokenType.STRING],
     // TO DO: change its name
     ["ბულეანი", TokenType.BOOLEAN],
 ]);

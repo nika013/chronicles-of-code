@@ -1,8 +1,8 @@
-/* Assuming you're using the default CodeMirror theme as a base */
-.CodeMirror .cm-comment { color: #28B463; }
+/* This theme pallet is not used currently */
+.CodeMirror .cm-comment { color: #33FF66; }
 .CodeMirror .cm-string { color: #40E0D0; }
 .CodeMirror .cm-keyword { color: #DFFF00; }
-
+.CodeMirror .
 .CodeMirror .cm-variable {
     color: #FF7F50; /* Black */
 }

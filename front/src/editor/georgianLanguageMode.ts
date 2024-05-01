@@ -4,7 +4,7 @@ import 'codemirror/lib/codemirror.css';
 import './GeorgianLanguageStyle.css'
 // georgianLanguageMode.ts
 
-const indentLength: number = 2
+const indentLength: number = 4
 defineMode('georgianLanguage', function() {
     // ... other parts of the mode definition ...
 
@@ -18,13 +18,13 @@ defineMode('georgianLanguage', function() {
         if (ch === '{') {
             _state.indentation += indentLength; // Increase indentation
         } else if (ch === '}') {
-            _state.indentation = Math.max(0, _state.indentation - indentLength); // Decrease indentation
+            _state.indentation = Math.max(0, _state.indentation - indentLength);
         }
         // Handle comments: if we find a slash and then another slash, it's a comment.
         if (ch === '/' && stream.eat('/')) {
             // Consume the rest of the line - it's a comment.
             stream.skipToEnd();
-            return 'comment'; // Apply the 'comment' style from the CSS.
+            return 'comment';
         }
 
         // Handle string literals.
@@ -32,19 +32,19 @@ defineMode('georgianLanguage', function() {
             // Consume all characters until the next quote character.
             stream.eatWhile((nextChar: string) => nextChar !== '"');
             stream.next(); // Consume the closing quote.
-            return 'string'; // Apply the 'string' style from the CSS.
+            return 'string'; 
         }
         
 
         if (ch === "'") {
             // Consume all characters until the next quote character.
             stream.eatWhile((nextChar: string) => nextChar !== "'");
-            stream.next(); // Consume the closing quote.
-            return 'string'; // Apply the 'string' style from the CSS.
+            stream.next(); 
+            return 'string'; 
         }
 
         if (stream.match(/^[0-9]+(\.[0-9]+)?/)) {
-            return "number";  // "value" could also be used if you prefer
+            return "number"; 
         }
         // Handle keywords.
         // Look for a sequence of characters that are not white-space, and check if it's a keyword.
@@ -64,31 +64,9 @@ defineMode('georgianLanguage', function() {
                 return 'keyword';
             }
         }
-
-        // If none of the above conditions are met, return null.
-        // This text doesn't get any special styling.
+        
         return null;
     }
-
-    // This function updates the state's indentation based on the line's text.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars
-    // function updateIndentation(state: any, text: string) {
-    //     const firstChar: string = text && text.charAt(0)
-    //     console.log("IN INDENTS")
-    //     // const level = state.indentation;
-    //     // const match = firstChar.match(/([{}])/g); // Match all opening/closing braces
-    //     if (firstChar == '{') {
-    //         // Increase indentation for each opening brace
-    //         state.indentation += indentLength;
-    //         console.log("state.indentation in if" +  state.indentation)
-    //
-    //     } else if (firstChar === '}') {
-    //         // Decrease indentation for each closing brace
-    //         state.indentation = Math.max(0, state.indentation -= indentLength);
-    //     }
-    //     console.log("state.indentation " +  state.indentation)
-    //     return state.indentation * indentLength;
-    // }
     
 
     return {
@@ -114,11 +92,6 @@ defineMode('georgianLanguage', function() {
                 return Math.max(0, state.indentation - indentLength); // Decrease indent if '}' is found, but not below zero
             }
             return state.indentation;
-            // Use the helper function to determine indentation
-            //
-            // const indentation: number =  updateIndentation(state, textAfter) * 4; // Multiply by the size of the indentation (e.g., 4 spaces)
-            // console.log("after func indentation " +  state.indentation)
-            // return indentation
         },
         lineComment: '//'
     };

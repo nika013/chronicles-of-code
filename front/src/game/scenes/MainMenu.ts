@@ -9,6 +9,7 @@ export class MainMenu extends Scene
     title: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
 
+
     constructor ()
     {
         super('MainMenu');

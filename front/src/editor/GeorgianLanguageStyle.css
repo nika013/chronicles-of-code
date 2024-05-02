@@ -1,0 +1,15 @@
+/* This theme pallet is not used currently */
+.CodeMirror .cm-comment { color: #33FF66; }
+.CodeMirror .cm-string { color: #40E0D0; }
+.CodeMirror .cm-keyword { color: #DFFF00; }
+.CodeMirror .
+.CodeMirror .cm-variable {
+    color: #FF7F50; /* Black */
+}
+.CodeMirror .cm-booleanValues {
+    color: #CCCCFF;
+}
+
+.CodeMirror .cm-number {
+    color: #DE3163;
+}

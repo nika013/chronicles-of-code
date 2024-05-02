@@ -37,8 +37,8 @@ function Playground()
             </div>
 
             <div className="editorContainer">
-            <p>Editor should appear here</p>
-            {/*    <GeorgianCodeEditor/>*/}
+            {/*<p>Editor should appear here</p>*/}
+                <GeorgianCodeEditor/>
             </div>
         </div>
     )

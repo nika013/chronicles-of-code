@@ -2,7 +2,6 @@
 .CodeMirror .cm-comment { color: #33FF66; }
 .CodeMirror .cm-string { color: #40E0D0; }
 .CodeMirror .cm-keyword { color: #DFFF00; }
-.CodeMirror .
 .CodeMirror .cm-variable {
     color: #FF7F50; /* Black */
 }
@@ -14,23 +13,13 @@
     color: #DE3163;
 }
 
+.CodeMirror{
+    height: 100vh;
+    font-size: 30px !important;
 
-.CodeMirror {
-    width: calc(100% - 55px); /* Adjust the width to subtract the gutter width */
-    height: 100%;
-}
-.CodeMirror {
-    font-size: 22px !important;
 }
 
-.CodeMirror-gutter .CodeMirror-linenumber {
-    font-size: 22px !important;
-}
 
-.CodeMirror-gutters {
-    width: 50px;
-}
-
-.editorContainer {
-    overflow: auto; /* Add scrolling if the content overflows */
+.CodeMirror-gutter {
+    font-size: 16px !important;
 }

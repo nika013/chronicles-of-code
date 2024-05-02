@@ -8,6 +8,7 @@ function GeorgianCodeEditor() {
     const [code, setCode] = useState('// დაწერე კოდი აქ');
 
     return (
+        
         <CodeMirror
             value={code}
             options={{

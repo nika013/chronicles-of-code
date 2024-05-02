@@ -13,3 +13,24 @@
 .CodeMirror .cm-number {
     color: #DE3163;
 }
+
+
+.CodeMirror {
+    width: calc(100% - 55px); /* Adjust the width to subtract the gutter width */
+    height: 100%;
+}
+.CodeMirror {
+    font-size: 22px !important;
+}
+
+.CodeMirror-gutter .CodeMirror-linenumber {
+    font-size: 22px !important;
+}
+
+.CodeMirror-gutters {
+    width: 50px;
+}
+
+.editorContainer {
+    overflow: auto; /* Add scrolling if the content overflows */
+}

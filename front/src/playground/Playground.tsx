@@ -1,13 +1,34 @@
-// import { useRef } from 'react';
-// import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame.tsx';
+import { useRef } from 'react';
+import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame.tsx';
 import './playground.css';
 import GeorgianCodeEditor from "../editor/GeorgianLanguageEditor.tsx";
 
 function Playground()
 {
 
-    //  References to the PhaserGame component (game and scene are exposed)
-    // const phaserRef = useRef<IRefPhaserGame | null>(null);
+    //    References to the PhaserGame component (game and scene are exposed)
+    const phaserRef = useRef<IRefPhaserGame | null>(null);
+    //
+    // const changeScene = () => {
+    //
+    //     if(phaserRef.current)
+    //     {
+    //         const scene = phaserRef.current.scene as TsikaraFirstLevel;
+    //
+    //         if (scene)
+    //         {
+    //             scene.changeScene();
+    //         }
+    //     }
+    // }
+    //
+    //
+    // Event emitted from the PhaserGame component
+    // const currentScene = (scene: Phaser.Scene) => {
+    //     console.log(scene)
+    // }
+    //ferences to the PhaserGame component (game and scene are exposed)
+    //const phaserRef = useRef<IRefPhaserGame | null>(null);
 
     // const changeScene = () => {
     //
@@ -24,16 +45,16 @@ function Playground()
 
 
     // Event emitted from the PhaserGame component
-    // const currentScene = (scene: Phaser.Scene) => {
-    //     console.log(scene)
-    // }
+    const currentScene = (scene: Phaser.Scene) => {
+        console.log(scene)
+    }
 
     return (
         <div className="playground">
             <div className="phaserGameContainer">
-                <p>game should appear here</p>
+                {/*<p>game should appear here</p>*/}
 
-                {/*<PhaserGame ref={phaserRef} currentActiveScene={currentScene} />*/}
+                <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
             </div>
 
             <div className="editorContainer">

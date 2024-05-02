@@ -10,6 +10,11 @@ body {
 
 }
 
+#game-container {
+    width: 100%;  
+    height: 100vh; 
+    overflow: hidden; /* Prevents scrollbars if canvas is larger than container */
+}
 
 
 .playground {
@@ -17,7 +22,6 @@ body {
     padding: 0;
     height: 100vh;
     display: flex;
-    /*height: 100%;*/
     align-items: flex-start;
 }
 
@@ -25,24 +29,12 @@ body {
     flex: 2;
     width: 100%;
     height: 100vh;
-
-    /*height: 100%;*/
-    /*display: flex;*/
     background-color: #DE3163;
-
-    /*justify-content: center;*/
-    /*align-items: center;*/
 }
 
 .editorContainer {
     flex: 1.5;
     width: 100%;
     height: 100vh;
-
-
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    background-color: #33FF66;
-
+    background-color: #33FF66
 }

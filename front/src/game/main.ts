@@ -13,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { x: 0, y: 400 },
+            gravity: { x: 0, y: 300 },
             debug: true
         }
     },
@@ -23,7 +23,14 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 const StartGame = (parent: string) => {
+    const parentElement = document.getElementById(parent);
+    if (!parentElement) {
+        throw new Error("Parent element not found");
+    }
 
+    // Set dimensions based on the parent element
+    config.width = parentElement.offsetWidth;
+    config.height = parentElement.offsetHeight;
     return new Game({ ...config, parent });
 
 }

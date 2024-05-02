@@ -44,7 +44,7 @@ export class TsikaraFirstLevel extends Scene {
     }
     
     createBoy() {
-        this.boy = this.physics.add.sprite(20, this.cameras.main.height - 200, 'boy')
+        this.boy = this.physics.add.sprite(20, this.cameras.main.height - 400, 'boy')
         // calculate scale by dividing scaleX by 14
         const scale: number = this.calculateScale(this.boy)[0] / 14
         this.boy.setScale(scale).setOrigin(0, 1)

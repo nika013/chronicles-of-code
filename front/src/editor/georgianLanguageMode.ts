@@ -10,6 +10,7 @@ defineMode('georgianLanguage', function() {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars
     function tokenBase(stream: any, _state: any): string | null {
+        
         // If the stream is at the start of a space, consume it and return null (no styling).
         if (stream.eatSpace()) return null;
         

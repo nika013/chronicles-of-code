@@ -46,7 +46,7 @@ export class TsikaraFirstLevel extends Scene {
     createBoy() {
         this.boy = this.physics.add.sprite(20, this.cameras.main.height - 400, 'boy')
         // calculate scale by dividing scaleX by 14
-        const scale: number = this.calculateScale(this.boy)[0] / 14
+        const scale: number = this.calculateScale(this.boy)[0] / 12
         this.boy.setScale(scale).setOrigin(0, 1)
         // this.boy.x = 10
         if (this.boy.body instanceof Phaser.Physics.Arcade.Body) {
@@ -59,13 +59,13 @@ export class TsikaraFirstLevel extends Scene {
 
         const scale: number[] = this.calculateScale(ground)
 
-        ground.setScale(scale[0], scale[1]/3).setOrigin(0, 1)
+        ground.setScale(scale[0], scale[1]/5).setOrigin(0, 1)
 
-        const bodyWidth = ground.width * scale[0]; // the full width of the scaled sprite
-        const bodyHeight = ground.height * scale[1]/3 * 0.5; // half of the scaled height (assuming bottom half is visible)
-
-        ground.body.setSize(bodyWidth, bodyHeight);
-        ground.body.setOffset(0, ground.height - bodyHeight); // adjust the vertical offset
+        // const bodyWidth = ground.width * scale[0]; // the full width of the scaled sprite
+        // const bodyHeight = ground.height * scale[1]/195; // half of the scaled height (assuming bottom half is visible)
+        //
+        // ground.body.setSize(bodyWidth, bodyHeight);
+        // ground.body.setOffset(0, ground.height - bodyHeight); // adjust the vertical offset
 
         ground.refreshBody()
     }

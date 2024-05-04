@@ -53,10 +53,9 @@ function runFullCycleTest(input: string, expected: unknown) {
     const tokens = tokenizer.scanTokens()
     const parser = new ExpressionParser(tokens)
     const expr: Expression = parser.parse()
-    const result=  interpreter.interpret(expr)
+    const result =  interpreter.interpret(expr)
 
     expect(result).toBe(expected)
-
 }
 
 describe("test unary expressions", () => {
@@ -112,16 +111,15 @@ describe("test logical operations", () => {
         const expected = true; // (true && true) || false
         runFullCycleTest(source, expected);
     });
-
 })
 
 describe("test grouping expressions", () => {
 
-it('evaluates expressions with grouping', () => {
-    const source = '(2 + 3) * 4';
-    const expected = 20;
-    runFullCycleTest(source, expected);
-});
+    it('evaluates expressions with grouping', () => {
+        const source = '(2 + 3) * 4';
+        const expected = 20;
+        runFullCycleTest(source, expected);
+    });
 });
 
 describe('Full Integration Test: Simple', () => {

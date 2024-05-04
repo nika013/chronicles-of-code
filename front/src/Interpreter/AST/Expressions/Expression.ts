@@ -1,5 +1,3 @@
-
-
 import {Token} from "../../Token.ts";
 import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor";
  

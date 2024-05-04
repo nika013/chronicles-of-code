@@ -65,11 +65,8 @@ export class ExpressionParser {
     // private hasError: boolean = false
 
     constructor(tokens: Token[]) {
-        console.log(tokens)
+        // console.log(tokens)
         this.tokens = tokens
-        // tokens.pop()
-        // this.tokens = tokens
-        // console.log(this.tokens)
     }
 
     public parse(): Expression {
@@ -87,52 +84,15 @@ export class ExpressionParser {
         }
     }
 
-    private handleError(error: ParseError): void {
-        console.error("Error parsing at token", this.previous().lexeme, "on line", this.previous().line, ":", error.message);
-        // Additional error handling or logging can be implemented here
-    }
-
-    //
-    // private synchronize(): void {
-    //     this.advance(); // Skip the erroneous token that caused the error
-    //
-    //     while (!this.isAtEnd()) {
-    //         if (this.previous().type === TokenType.SEMICOLON) {
-    //             // A semicolon usually means the end of a statement.
-    //             return; // Safe point to continue parsing
-    //         }
-    //
-    //         // Check if the next token starts a new statement or structure.
-    //         switch (this.peek().type) {
-    //             case TokenType.IF:
-    //             case TokenType.ELSE:
-    //             case TokenType.FOR:
-    //             case TokenType.WHILE:
-    //             case TokenType.TRUE:   // Considering control keywords and booleans might not be ideal for recovery points,
-    //             case TokenType.FALSE:  // but depending on your language's structure, these might imply logical starts or breaks.
-    //                 // These keywords start new blocks or statements, making them good recovery points.
-    //                 return;
-    //             default:
-    //                 // If the current token is not a starting point for a new block or a semicolon,
-    //                 // continue to the next token.
-    //                 this.advance();
-    //                 break;
-    //         }
-    //     }
-    // }
-
-
-    private error(token: Token, message: string): ParseError {
-        console.error(`Error at '${token.lexeme}' (${token.line}): ${message}`);
-        // this.hasError = true;
-        return new ParseError(message);
-    }
-    
     // expression     → equality ;
     private expression(): Expression{
         return this.logical_or()
     }
 
+    private handleError(error: ParseError): void {
+        console.error("Error parsing at token", this.previous().lexeme, "on line", this.previous().line, ":", error.message);
+        // Additional error handling or logging can be implemented here
+    }
 
 //
 //     **Precedence Management**
@@ -248,9 +208,13 @@ export class ExpressionParser {
         
         throw this.error(this.peek(), errorMessage)
     }
-    
-    
 
+    private error(token: Token, message: string): ParseError {
+        console.error(`Error at '${token.lexeme}' (${token.line}): ${message}`);
+        // this.hasError = true;
+        return new ParseError(message);
+    }
+    
     // checks if next Token matches any of the TokenType that is given to it
     // if it does, current increments
     private match(...types: TokenType[]): boolean {
@@ -296,5 +260,34 @@ export class ExpressionParser {
         // this.current++
         // return nextToken
     }
+
+    //
+    // private synchronize(): void {
+    //     this.advance(); // Skip the erroneous token that caused the error
+    //
+    //     while (!this.isAtEnd()) {
+    //         if (this.previous().type === TokenType.SEMICOLON) {
+    //             // A semicolon usually means the end of a statement.
+    //             return; // Safe point to continue parsing
+    //         }
+    //
+    //         // Check if the next token starts a new statement or structure.
+    //         switch (this.peek().type) {
+    //             case TokenType.IF:
+    //             case TokenType.ELSE:
+    //             case TokenType.FOR:
+    //             case TokenType.WHILE:
+    //             case TokenType.TRUE:   // Considering control keywords and booleans might not be ideal for recovery points,
+    //             case TokenType.FALSE:  // but depending on your language's structure, these might imply logical starts or breaks.
+    //                 // These keywords start new blocks or statements, making them good recovery points.
+    //                 return;
+    //             default:
+    //                 // If the current token is not a starting point for a new block or a semicolon,
+    //                 // continue to the next token.
+    //                 this.advance();
+    //                 break;
+    //         }
+    //     }
+    // }
 }
 

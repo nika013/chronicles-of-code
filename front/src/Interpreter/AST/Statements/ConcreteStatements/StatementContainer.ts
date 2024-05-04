@@ -1,28 +1,26 @@
 import { Statement } from "../Interfaces/Statement";
 import { Visitor } from "../Interfaces/Visitor";
+import { VariableContainer } from "./VariableContainer";
 
-export class StatementContainer {
+export class StatementContainer extends VariableContainer {
     private statements: Statement[]
-    private visitor: Visitor | null
 
-    constructor() {
-        this.statements = [];
-        this.visitor = null;
+    constructor(statements: Statement[] = []) {
+        super()
+        this.statements = statements;
     }
 
     public addStatement(statement: Statement) {
         this.statements.push(statement)
     }
 
-    public setVisitor(v: Visitor) {
-        this.visitor = v
+    public addStatements(newStatements: Statement[]) {
+        this.statements.push(...newStatements);
     }
 
-    public callStatements() {
+    public callStatements(visitor: Visitor) {
         this.statements.forEach((currentStatement: Statement) => {
-            if (this.visitor != null) {
-                currentStatement.accept(this.visitor)
-            }
+            currentStatement.accept(visitor)
         });
     }
 }

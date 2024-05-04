@@ -80,7 +80,6 @@ describe('ExpressionInterpreter easy ones', () => {
 
 });
 
-
 describe('Interpreter Grouping Evaluations', () => {
     const interpreter = new ExpressionInterpreter(); // Assuming the interpreter doesn't require initial setup
 
@@ -269,7 +268,4 @@ describe('Complex Expression Interpretation', () => {
         const result = interpreter.interpret(expr);
         expect(result).toEqual("53"); // Assuming your language handles implicit conversion like JavaScript
     });
-
 });
-
-

@@ -95,11 +95,6 @@ export class TsikaraFirstLevel extends Scene {
     update(_time: never, _delta: never) {
 
 
-
-        // const keyLeftObject = this.input.keyboard.addKey('LEFT');
-        // const keyRightObject = this.input.keyboard.addKey('RIGHT');
-        // const keySpaceObject = this.input.keyboard.addKey('SPACE')
-
         if (this.cursors.left.isDown) {
             if (this.boy.x > 20) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

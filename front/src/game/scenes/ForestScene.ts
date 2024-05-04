@@ -8,10 +8,11 @@ export class ForestScene extends Scene {
     private background2: Image| Sprite | null;
     private background3: Image| Sprite | null;
     private background4: Image| Sprite | null;
+    private character: Phaser.GameObjects.Sprite;
+    private ground: Sprite;
 
     camera: Phaser.Cameras.Scene2D.Camera;
     // ground: Phaser.GameObjects.Sprite;
-    character: Phaser.GameObjects.Sprite ;
     platforms: Phaser.Physics.Arcade.StaticGroup;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -38,16 +39,34 @@ export class ForestScene extends Scene {
         this.load.image('backgroundC2', '/assets/Forest/PNG/Backgrounds/background C layer2.png')
         this.load.image('backgroundC3', '/assets/Forest/PNG/Backgrounds/background C layer3.png')
         this.load.image('backgroundC4', '/assets/Forest/PNG/Backgrounds/background C layer4.png')
-
+        this.load.image('ground', '/assets/Forest/PNG/groundC.png')
+        this.load.image('character', '/assets/Forest/PNG/boyWithBull.png')
     }
 
+    private createGround() {
+        // Create the ground sprite at the desired position
+        this.ground = this.platforms.create(0, this.cameras.main.height - 30, 'ground');
 
+        const scale = this.calculateScale(this.ground);
+        this.ground.setScale(scale[0]*2, scale[1]/9);
 
+        // Manually update the physics body to match the sprite's visual bounds
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        this.ground.body.updateFromGameObject();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    create(_data: never) {
-        this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x30ff00);
+        // Set the origin and scroll factor
+        this.ground.setOrigin(0, 0).setScrollFactor(0);
+    }
+
+    private createBoy() {
+        this.character = this.physics.add.sprite(20, this.camera.height - 400, 'character')
+        const scale = this.calculateScale(this.character)
+        const scalingNumber: number = 7
+        this.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
+    }
+    
+    private createBackgrounds() {
         this.background1 = this.add.image(0, 0, 'backgroundC1')
         let scale = this.calculateScale(this.background1)
         this.background1.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
@@ -63,55 +82,64 @@ export class ForestScene extends Scene {
         this.background4 = this.add.image(0, 0, 'backgroundC4')
         scale = this.calculateScale(this.background4)
         this.background4.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
+    }
 
 
-        // this.platforms = this.physics.add.staticGroup()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    create(_data: never) {
+        this.camera = this.cameras.main;
+        this.camera.setBackgroundColor(0x30ff00);
+
+        this.platforms = this.physics.add.staticGroup()
+
+        this.createBackgrounds()
+        this.createGround()
+        this.createBoy()
+        
+        this.physics.add.collider(this.character, this.platforms);
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         this.cursors = this.input.keyboard.createCursorKeys();
 
-
         EventBus.emit('current-scene-ready', this);
     }
+    
+    private updateCharacterMovement() {
+        if (this.cursors.left.isDown) {
+            if (this.character.x > 20) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                this.character.body?.setVelocityX(-160)
+            }else {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                this.character.body?.setVelocityX(0)
+            }
+        }else if (this.cursors.right.isDown) {
+            if (this.character.x < this.camera.width - 10) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                this.character.body?.setVelocityX(160);
+            }
+        }else {
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            this.character.body?.setVelocityX(0)
+        }
+        if (this.cursors.up.isDown) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            this.character.body?.setVelocityY(-330); // Jump up
+        }
+    }
+    
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     update(_time: never, _delta: never) {
-
-
-
-        // const keyLeftObject = this.input.keyboard.addKey('LEFT');
-        // const keyRightObject = this.input.keyboard.addKey('RIGHT');
-        // const keySpaceObject = this.input.keyboard.addKey('SPACE')
-
-        // if (this.cursors.left.isDown) {
-        //     if (this.character.x > 20) {
-        //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //         // @ts-expect-error
-        //         this.boy.body.setVelocityX(-160)
-        //     }else {
-        //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //         // @ts-expect-error
-        //         this.boy.body.setVelocityX(0)
-        //     }
-        // }else if (this.cursors.right.isDown) {
-        //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //     // @ts-expect-error
-        //     this.boy.body.setVelocityX(160);
-        //
-        //     // if (this.boy.x < this.cameras.main.width - 5) {
-        //     //     this.boy.x += 5
-        //     // }
-        // }else if (this.cursors.up.isDown) {
-        //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //     // @ts-expect-error
-        //     this.boy.body.setVelocityY(-330); // Jump up
-        // }else {
-        //
-        //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //     // @ts-expect-error
-        //     this.boy.body.setVelocityX(0)
-        // }
-
+        this.updateCharacterMovement()
+        
+        
     }
 
     changeScene() {

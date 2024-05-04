@@ -4,7 +4,11 @@ import Image = Phaser.GameObjects.Image;
 import {EventBus} from "../EventBus.ts";
 
 export class ForestScene extends Scene {
-    private background: Image |Sprite | null;
+    private background1: Image |Sprite | null;
+    private background2: Image| Sprite | null;
+    private background3: Image| Sprite | null;
+    private background4: Image| Sprite | null;
+
     camera: Phaser.Cameras.Scene2D.Camera;
     // ground: Phaser.GameObjects.Sprite;
     character: Phaser.GameObjects.Sprite ;
@@ -30,8 +34,11 @@ export class ForestScene extends Scene {
 
     preload() {
         console.log('loaded')
-        this.load.image('background', '/assets/Mossy Tileset/Mossy - TileSet.png')
-        // this.load.image('boy', '/assets/boy.png')
+        this.load.image('backgroundC1', '/assets/Forest/PNG/Backgrounds/background C layer1.png')
+        this.load.image('backgroundC2', '/assets/Forest/PNG/Backgrounds/background C layer2.png')
+        this.load.image('backgroundC3', '/assets/Forest/PNG/Backgrounds/background C layer3.png')
+        this.load.image('backgroundC4', '/assets/Forest/PNG/Backgrounds/background C layer4.png')
+
     }
 
 
@@ -41,13 +48,24 @@ export class ForestScene extends Scene {
     create(_data: never) {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x30ff00);
-        this.background = this.add.image(0, 100, 'background')
-        const scale = this.calculateScale(this.background)
-        this.background.setScale(scale[0] / 10, scale[1] /10).setOrigin(0, 0).setScrollFactor(0)
-        this.platforms = this.physics.add.staticGroup()
-        // this.
-        // this.physics.add.collider(this.character, this.platforms);
+        this.background1 = this.add.image(0, 0, 'backgroundC1')
+        let scale = this.calculateScale(this.background1)
+        this.background1.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
 
+        this.background2 = this.add.image(0, 0, 'backgroundC2')
+        scale = this.calculateScale(this.background2)
+        this.background2.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
+
+        this.background3 = this.add.image(0, 0, 'backgroundC3')
+        scale = this.calculateScale(this.background3)
+        this.background3.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
+
+        this.background4 = this.add.image(0, 0, 'backgroundC4')
+        scale = this.calculateScale(this.background4)
+        this.background4.setScale(scale[0] , scale[1]).setOrigin(0, 0).setScrollFactor(0)
+
+
+        // this.platforms = this.physics.add.staticGroup()
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         this.cursors = this.input.keyboard.createCursorKeys();

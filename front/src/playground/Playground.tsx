@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { IRefPhaserGame, PhaserGame } from '../game/PhaserGame.tsx';
 import './playground.css';
-import GeorgianCodeEditor from "../editor/GeorgianLanguageEditor.tsx";
 
 function Playground()
 {
@@ -57,10 +56,9 @@ function Playground()
                 <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
             </div>
 
-            <div className="editorContainer">
-            {/*<p>Editor should appear here</p>*/}
-                <GeorgianCodeEditor/>
-            </div>
+            {/*<div className="editorContainer">*/}
+            {/*    <GeorgianCodeEditor/>*/}
+            {/*</div>*/}
         </div>
     )
 }

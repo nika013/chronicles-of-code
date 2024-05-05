@@ -60,13 +60,7 @@ export class TsikaraFirstLevel extends Scene {
         const scale: number[] = this.calculateScale(ground)
 
         ground.setScale(scale[0], scale[1]/5).setOrigin(0, 1)
-
-        // const bodyWidth = ground.width * scale[0]; // the full width of the scaled sprite
-        // const bodyHeight = ground.height * scale[1]/195; // half of the scaled height (assuming bottom half is visible)
-        //
-        // ground.body.setSize(bodyWidth, bodyHeight);
-        // ground.body.setOffset(0, ground.height - bodyHeight); // adjust the vertical offset
-
+        
         ground.refreshBody()
     }
     

@@ -17,8 +17,10 @@ export class ForestScene extends Scene {
     private background4: TileSprite;
     private character: Phaser.GameObjects.Sprite;
     private ground: Sprite;
-    private endX: number = 1300;
+    private endX: number = 800;
 
+    private lastTile: TileSprite
+    
     camera: Phaser.Cameras.Scene2D.Camera;
     // ground: Phaser.GameObjects.Sprite;
     staticPlatforms: Phaser.Physics.Arcade.StaticGroup;
@@ -29,7 +31,7 @@ export class ForestScene extends Scene {
     private backgroun2speed: number = 50;
     private backgroun3speed: number = 80;
     private backgroun4speed: number = 100;
-
+    private platformsSpeed: number = 120
 
 
     constructor ()
@@ -70,7 +72,7 @@ export class ForestScene extends Scene {
         // Manually update the physics body to match the sprite's visual bounds
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        this.ground.body.updateFromGameObject();
+        this.ground.body?.updateFromGameObject();
 
         // Set the origin and scroll factor
         this.ground.setOrigin(0, 0).setScrollFactor(0);
@@ -112,28 +114,29 @@ export class ForestScene extends Scene {
     }
 
     private createPlatforms() {
-        const numIterations: number = 15
+        const numIterations: number = 10
         const xCoordinate: number = 500
         const groundTop = this.ground.y - this.ground.displayHeight;
 
         console.log("ground.y " + this.ground.y + "   this.ground.displ " + this.ground.displayHeight)
         const maxPlatformHeight = this.camera.height - this.character.displayHeight;
+        const height = this.textures.get("tile1").getSourceImage().height;
 
         for (let i = 0; i < numIterations; i++) {
             console.log("ground.y " + this.ground.y + "   this.ground.displ " + this.ground.displayHeight)
 
             const randomNumber: number = Math.random()
-            const height = this.textures.get("tile1").getSourceImage().height;
             const y = groundTop - randomNumber * (maxPlatformHeight - this.ground.displayHeight - height)
-            // console.log("y: " + y + " height: " + height 
-            // + "; height of screen: " + this.camera.height, 
-            //     "  groundTop:" + groundTop)
-            // console.log('groundTop ' + ( groundTop))
+           
             const tilePlatform = this.platforms.create(300 + i * xCoordinate , y, 'tile1');
             tilePlatform.body.setAllowGravity(false);
-            // when some touches, does not make it move.
+            // when something touches, does not make it move.
             tilePlatform.body.setImmovable(true);
         }
+
+        const randomNumber: number = Math.random()
+        const y = groundTop - randomNumber * (maxPlatformHeight - this.ground.displayHeight - height)
+        this.lastTile  = this.platforms.create(300 + numIterations * xCoordinate , y, 'tile1');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -170,7 +173,6 @@ export class ForestScene extends Scene {
         this.handleCharacterYCoordinate()
 
         if (this.character.x < centerX || this.character.x > this.endX) {
-            // Allow character to move until it reaches the center of the screen or the end
             this.handleCharacterXCoordinateMoving()
         } else {
             // Lock character's x position at the center
@@ -183,6 +185,7 @@ export class ForestScene extends Scene {
     
     
     
+    
     private handleCharacterYCoordinate() {
         if (this.cursors.up.isDown) {
             this.character.body?.setVelocityY(-330); // Jump up
@@ -190,64 +193,32 @@ export class ForestScene extends Scene {
     }
     
     private handleCharacterXCoordinateMoving() {
+        const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
+        const characterRightEdge = this.character.x + this.character.width;
 
-        if (this.cursors.left.isDown) {
-            if (this.character.x > 20) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                this.character.body?.setVelocityX(-160)
-            }else {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                this.character.body?.setVelocityX(0)
-            }
-        }else if (this.cursors.right.isDown) {
-            if (this.character.x < this.camera.width - 10) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                this.character.body?.setVelocityX(160);
-            }
+        if (characterRightEdge < this.camera.width && moveAmount > 0) {
+            this.character.body?.setVelocityX(moveAmount);
+        } else if (this.character.x > 20 && moveAmount < 0) {
+            this.character.body?.setVelocityX(moveAmount);
         }else {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            this.character.body?.setVelocityX(0)
+            this.character.body?.setVelocityX(0);
+
         }
     }
     
-    // private handleBackgroundMovement() {
-    //     const moveCharacter = (velocity: number) => {
-    //         if (this.character.x > 20 && this.character.x < this.camera.width - 10) {
-    //             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //             // @ts-expect-error
-    //             this.character.body?.setVelocityX(velocity);
-    //         }
-    //     };
-    //
-    //     if (this.cursors.left.isDown) {
-    //         moveCharacter(-160);
-    //     } else if (this.cursors.right.isDown) {
-    //         moveCharacter(160);
-    //     } else {
-    //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //         // @ts-expect-error
-    //         this.character.body?.setVelocityX(0);
-    //     }
-    // }
-
-
-    
     private updatePlatformsPosition(delta: number) {
-        if (this.platforms.children.entries.length > 0) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            this.platforms.children.each(platform => {
-                if (platform instanceof Phaser.GameObjects.Sprite) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-expect-error
-                    platform.x -= this.character.body?.velocity.x /delta;
-                }
-            });
-        }
+        const updatePosition = (platform: Phaser.GameObjects.Sprite) => {
+            if (this.cursors.left.isDown) {
+                platform.x = platform.x + this.platformsSpeed / delta
+            }else if(this.cursors.right.isDown) {
+                platform.x = platform.x - this.platformsSpeed / delta
+            }
+        };
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        this.platforms.children.each(platform => {
+            updatePosition(platform as Phaser.GameObjects.Sprite)
+        });
     }
 
     private moveBackground(delta: number, forward: boolean) {
@@ -278,16 +249,14 @@ export class ForestScene extends Scene {
     }
     
     update(_time: never, delta: number) {
-        if (this.character.x >= this.endX) {
+
+        if (this.lastTile.x <900) {
             this.finishGame();
             return;
-        }
+        }   
         
         this.updateCharacterMovement()
         this.updateBackgroundMovement(delta)
-        // if (this.character.body?.velocity.x !== 0) {  // Assuming character body exists and has velocity
-        //     this.updateBackgroundsPosition(delta)
-        // }
         this.updatePlatformsPosition(delta)
     }
 

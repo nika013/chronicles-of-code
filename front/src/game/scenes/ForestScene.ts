@@ -175,6 +175,7 @@ export class ForestScene extends Scene {
         if (this.character.x < centerX || this.character.x > this.endX) {
             this.handleCharacterXCoordinateMoving()
         } else {
+            this.handleFlipingCharacter()
             // Lock character's x position at the center
             this.character.x = centerX;
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -183,11 +184,14 @@ export class ForestScene extends Scene {
         }
     }
     
-    
+    private handleFlipingCharacter(){
+        const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
+        moveAmount < 0 ? this.character.flipX = true : this.character.flipX = false
+    }
     
     
     private handleCharacterYCoordinate() {
-        if (this.cursors.up.isDown) {
+        if (this.cursors.up.isDown && this.character.y >  this.character.displayHeight ) {
             this.character.body?.setVelocityY(-330); // Jump up
         }
     }
@@ -196,8 +200,10 @@ export class ForestScene extends Scene {
         const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
         const characterRightEdge = this.character.x + this.character.width;
 
+        moveAmount < 0 ? this.character.flipX = true : this.character.flipX = false
         if (characterRightEdge < this.camera.width && moveAmount > 0) {
             this.character.body?.setVelocityX(moveAmount);
+
         } else if (this.character.x > 20 && moveAmount < 0) {
             this.character.body?.setVelocityX(moveAmount);
         }else {

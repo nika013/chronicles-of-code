@@ -1,12 +1,16 @@
-import {IWhileStatement} from "../Interfaces/IWhileStatement.ts";
+import { Statement } from "../Interfaces/Statement.ts";
+import { Visitor } from "../Interfaces/Visitor.ts";
+import { Expression } from "../../Expressions/Expression.ts";
+import { ConditionalStatement } from "./ConditionalStatement.ts";
 
-export class WhileStatement implements IWhileStatement {
-    
-    execute(): boolean {
-        return false;
+export class WhileStatement extends ConditionalStatement implements Statement {
+
+    constructor(statements: Statement[] = [], expression: Expression) {
+        super(statements, expression);
+    }
+
+    public accept(visitor: Visitor): void {
+        visitor.doWhileStatement(this)
     }
     
-    // while(IntegerConstant) {
-    //     statement.execute()
-    // }
 }

@@ -15,4 +15,5 @@ export class FuncStatement implements Statement {
     public accept(visitor: Visitor): void {
         visitor.doFuncStatement(this)
     }
+    
 }

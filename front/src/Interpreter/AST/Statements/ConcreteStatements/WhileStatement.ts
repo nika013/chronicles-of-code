@@ -12,4 +12,5 @@ export class WhileStatement extends ConditionalStatement implements Statement {
     public accept(visitor: Visitor): void {
         visitor.doWhileStatement(this)
     }
+    
 }

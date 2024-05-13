@@ -41,6 +41,11 @@ export class VariableContainer {
         return this.variables.get(name);
     }
 
+    /**
+     * TODO check if types matches of prev variable and new
+     * @param variableName 
+     * @param newValue 
+     */
     public setValue(variableName: string, newValue: VariableValue): void {
         const variable = this.variables.get(variableName);
         if (variable) {

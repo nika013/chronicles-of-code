@@ -3,6 +3,7 @@ import Sprite = Phaser.GameObjects.Sprite;
 import Image = Phaser.GameObjects.Image;
 import {EventBus} from "../EventBus.ts";
 import TileSprite = Phaser.GameObjects.TileSprite;
+import {PlatformManager} from "./platformManager.ts";
 
 
 interface Background {
@@ -15,24 +16,25 @@ export class ForestScene extends Scene {
     private background2: TileSprite;
     private background3: TileSprite;
     private background4: TileSprite;
-    private character: Phaser.GameObjects.Sprite;
-    private ground: Sprite;
+    character: Phaser.GameObjects.Sprite;
+    ground: Sprite;
     private endX: number = 800;
 
     private lastTile: TileSprite
-    
+
     camera: Phaser.Cameras.Scene2D.Camera;
     // ground: Phaser.GameObjects.Sprite;
     staticPlatforms: Phaser.Physics.Arcade.StaticGroup;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     platforms: Phaser.Physics.Arcade.Group;
-    
+
     private backgroun1speed: number = 25;
     private backgroun2speed: number = 50;
     private backgroun3speed: number = 80;
     private backgroun4speed: number = 100;
-    private platformsSpeed: number = 120
+    platformsSpeed: number = 120
 
+    platformManager: PlatformManager
 
     constructor ()
     {
@@ -52,14 +54,13 @@ export class ForestScene extends Scene {
     }
 
     preload() {
-        console.log('loaded')
         this.load.image('backgroundC1', '/assets/Forest/PNG/Backgrounds/background C layer1.png')
         this.load.image('backgroundC2', '/assets/Forest/PNG/Backgrounds/background C layer2.png')
         this.load.image('backgroundC3', '/assets/Forest/PNG/Backgrounds/background C layer3.png')
         this.load.image('backgroundC4', '/assets/Forest/PNG/Backgrounds/background C layer4.png')
         this.load.image('ground', '/assets/Forest/PNG/groundC.png')
         this.load.image('character', '/assets/Forest/PNG/boyWithBull.png')
-        this.load.image('tile1', '/assets/Forest/Tiles/tile1.png')
+        this.load.image('tile1', '/assets/Forest/Platforms/tile1.png')
     }
 
     private createGround() {
@@ -84,7 +85,7 @@ export class ForestScene extends Scene {
         const scalingNumber: number = 10
         this.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
     }
-    
+
     private createBackgrounds() {
         const backgroundHeight = this.cameras.main.height * 0.59
         this.background1 = this.add.tileSprite(0, 0, this.cameras.main.width, backgroundHeight, 'backgroundC1')
@@ -98,45 +99,19 @@ export class ForestScene extends Scene {
         scale = this.calculateScale(this.background2)
         this.background2.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
-            // .setScrollFactor(0.4)
+        // .setScrollFactor(0.4)
 
         this.background3 = this.add.tileSprite(0, 0,this.cameras.main.width, backgroundHeight,  'backgroundC3')
         scale = this.calculateScale(this.background3)
         this.background3.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
-            // .setScrollFactor(0.6)
+        // .setScrollFactor(0.6)
 
         this.background4 = this.add.tileSprite(0, 0,this.cameras.main.width , backgroundHeight,  'backgroundC4')
         scale = this.calculateScale(this.background4)
         this.background4.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
-            // .setScrollFactor(0.8)
-    }
-
-    private createPlatforms() {
-        const numIterations: number = 10
-        const xCoordinate: number = 500
-        const groundTop = this.ground.y - this.ground.displayHeight;
-
-        console.log("ground.y " + this.ground.y + "   this.ground.displ " + this.ground.displayHeight)
-        const maxPlatformHeight = this.camera.height - this.character.displayHeight;
-        const height = this.textures.get("tile1").getSourceImage().height;
-
-        for (let i = 0; i < numIterations; i++) {
-            console.log("ground.y " + this.ground.y + "   this.ground.displ " + this.ground.displayHeight)
-
-            const randomNumber: number = Math.random()
-            const y = groundTop - randomNumber * (maxPlatformHeight - this.ground.displayHeight - height)
-           
-            const tilePlatform = this.platforms.create(300 + i * xCoordinate , y, 'tile1');
-            tilePlatform.body.setAllowGravity(false);
-            // when something touches, does not make it move.
-            tilePlatform.body.setImmovable(true);
-        }
-
-        const randomNumber: number = Math.random()
-        const y = groundTop - randomNumber * (maxPlatformHeight - this.ground.displayHeight - height)
-        this.lastTile  = this.platforms.create(300 + numIterations * xCoordinate , y, 'tile1');
+        // .setScrollFactor(0.8)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -149,25 +124,27 @@ export class ForestScene extends Scene {
 
         this.staticPlatforms = this.physics.add.staticGroup()
         this.platforms = this.physics.add.group()
-        
+
         this.createBackgrounds()
         this.createGround()
         this.createBoy()
-        this.createPlatforms()
-        this.physics.add.existing(this.character);
-        this.camera.startFollow(this.character, true, 0.1, 0.0);
+        this.platformManager = new PlatformManager(this)
+        // this.createPlatforms()
+        this.platformManager.createPlatforms(this, this.platforms)
 
+        //dont know if we need these 2 lines
+        // this.physics.add.existing(this.character);
+        // this.camera.startFollow(this.character, true, 0.1, 0.0);
 
+        this.platformManager.setColliderToPlatforms()
         this.physics.add.collider(this.character, this.staticPlatforms);
-        this.physics.add.collider(this.character, this.platforms);
-
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         this.cursors = this.input.keyboard.createCursorKeys();
 
         EventBus.emit('current-scene-ready', this);
     }
-    
+
     private updateCharacterMovement() {
         const centerX = this.cameras.main.width / 4;
         this.handleCharacterYCoordinate()
@@ -183,19 +160,19 @@ export class ForestScene extends Scene {
             this.character.body.velocity.x = 0; // Stop horizontal movement
         }
     }
-    
+
     private handleFlipingCharacter(){
         const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
         moveAmount < 0 ? this.character.flipX = true : this.character.flipX = false
     }
-    
-    
+
+
     private handleCharacterYCoordinate() {
         if (this.cursors.up.isDown && this.character.y >  this.character.displayHeight ) {
             this.character.body?.setVelocityY(-330); // Jump up
         }
     }
-    
+
     private handleCharacterXCoordinateMoving() {
         const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
         const characterRightEdge = this.character.x + this.character.width;
@@ -212,20 +189,6 @@ export class ForestScene extends Scene {
         }
     }
     
-    private updatePlatformsPosition(delta: number) {
-        const updatePosition = (platform: Phaser.GameObjects.Sprite) => {
-            if (this.cursors.left.isDown) {
-                platform.x = platform.x + this.platformsSpeed / delta
-            }else if(this.cursors.right.isDown) {
-                platform.x = platform.x - this.platformsSpeed / delta
-            }
-        };
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        this.platforms.children.each(platform => {
-            updatePosition(platform as Phaser.GameObjects.Sprite)
-        });
-    }
 
     private moveBackground(delta: number, forward: boolean) {
         const backgrounds: Background[] = [
@@ -245,7 +208,7 @@ export class ForestScene extends Scene {
             });
         }
     }
-    
+
     private updateBackgroundMovement(delta: number ) {
         if (this.cursors.left.isDown) {
             this.moveBackground(delta, false)
@@ -253,17 +216,18 @@ export class ForestScene extends Scene {
             this.moveBackground(delta, true)
         }
     }
-    
+
     update(_time: never, delta: number) {
 
-        if (this.lastTile.x <900) {
-            this.finishGame();
-            return;
-        }   
-        
+        console.log("heh")
+        // if (this.lastTile.x <900) {
+        //     this.finishGame();
+        //     return;
+        // }
+
         this.updateCharacterMovement()
         this.updateBackgroundMovement(delta)
-        this.updatePlatformsPosition(delta)
+        this.platformManager.updatePlatformsPosition(delta)
     }
 
     private finishGame() {

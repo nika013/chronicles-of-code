@@ -1,4 +1,5 @@
 import {ForestScene} from "./ForestScene.ts";
+import {calculateScale} from "./scaleUtils.ts";
 
 interface Background {
     obj: Phaser.GameObjects.TileSprite;
@@ -14,26 +15,26 @@ export class BackgroundManager {
     createBackgrounds() {
         const backgroundHeight = this.scene.cameras.main.height * 0.59
         this.scene.background1 = this.scene.add.tileSprite(0, 0, this.scene.cameras.main.width, backgroundHeight, 'backgroundC1')
-        let scale = this.scene.calculateScale(this.scene.background1)
+        let scale = calculateScale(this.scene.background1, this.scene.cameras)
         this.scene.background1.setScale(scale[0] , scale[1])
             // .setScrollFactor(0.2)   
             .setOrigin(0, 0)
 
 
         this.scene.background2 = this.scene.add.tileSprite(0, 0, this.scene.cameras.main.width,  backgroundHeight, 'backgroundC2')
-        scale = this.scene.calculateScale(this.scene.background2)
+        scale = calculateScale(this.scene.background2, this.scene.cameras)
         this.scene.background2.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
         // .setScrollFactor(0.4)
 
         this.scene.background3 = this.scene.add.tileSprite(0, 0,this.scene.cameras.main.width, backgroundHeight,  'backgroundC3')
-        scale = this.scene.calculateScale(this.scene.background3)
+        scale = calculateScale(this.scene.background3, this.scene.cameras)
         this.scene.background3.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
         // .setScrollFactor(0.6)
 
         this.scene.background4 = this.scene.add.tileSprite(0, 0,this.scene.cameras.main.width , backgroundHeight,  'backgroundC4')
-        scale = this.scene.calculateScale(this.scene.background4)
+        scale = calculateScale(this.scene.background4, this.scene.cameras)
         this.scene.background4.setScale(scale[0] , scale[1])
             .setOrigin(0, 0)
         // .setScrollFactor(0.8)

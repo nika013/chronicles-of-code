@@ -1,11 +1,11 @@
 import {Scene} from "phaser";
 import Sprite = Phaser.GameObjects.Sprite;
-import Image = Phaser.GameObjects.Image;
 import {EventBus} from "../../EventBus.ts";
 import TileSprite = Phaser.GameObjects.TileSprite;
 import {PlatformManager} from "./platformManager.ts";
 import {BackgroundManager} from "./BackgroundManager.ts";
 import {CharacterManager} from "./CharacterManager.ts";
+import {calculateScale} from "./scaleUtils.ts";
 
 
 
@@ -22,7 +22,6 @@ export class ForestScene extends Scene {
     private lastTile: TileSprite
 
     camera: Phaser.Cameras.Scene2D.Camera;
-    // ground: Phaser.GameObjects.Sprite;
     staticPlatforms: Phaser.Physics.Arcade.StaticGroup;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     platforms: Phaser.Physics.Arcade.Group;
@@ -36,18 +35,12 @@ export class ForestScene extends Scene {
     platformManager: PlatformManager
     backgroundManager: BackgroundManager
     characterManager: CharacterManager
+    
     constructor ()
     {
         super('ForestScene');
-
     }
-
-    calculateScale(obj: Sprite | Image| TileSprite ) {
-        const scaleX = this.cameras.main.width / obj.width
-        const scaleY = this.cameras.main.height / obj.height
-        return [scaleX, scaleY]
-    }
-
+    
     init() {
         console.log('inited')
 
@@ -67,7 +60,7 @@ export class ForestScene extends Scene {
         // Create the ground sprite at the desired position
         this.ground = this.staticPlatforms.create(0, this.cameras.main.height - 30, 'ground');
 
-        const scale = this.calculateScale(this.ground);
+        const scale = calculateScale(this.ground, this.cameras);
         this.ground.setScale(scale[0]*2, scale[1]/9);
 
         // Manually update the physics body to match the sprite's visual bounds
@@ -78,42 +71,9 @@ export class ForestScene extends Scene {
         // Set the origin and scroll factor
         this.ground.setOrigin(0, 0).setScrollFactor(0);
     }
-
-    // private createBoy() {
-    //     this.character = this.physics.add.sprite(20, this.camera.height - 400, 'character')
-    //     const scale = this.calculateScale(this.character)
-    //     const scalingNumber: number = 10
-    //     this.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
-    // }
-
-    private createBackgrounds() {
-        const backgroundHeight = this.cameras.main.height * 0.59
-        this.background1 = this.add.tileSprite(0, 0, this.cameras.main.width, backgroundHeight, 'backgroundC1')
-        let scale = this.calculateScale(this.background1)
-        this.background1.setScale(scale[0] , scale[1])
-            // .setScrollFactor(0.2)   
-            .setOrigin(0, 0)
-
-
-        this.background2 = this.add.tileSprite(0, 0, this.cameras.main.width,  backgroundHeight, 'backgroundC2')
-        scale = this.calculateScale(this.background2)
-        this.background2.setScale(scale[0] , scale[1])
-            .setOrigin(0, 0)
-        // .setScrollFactor(0.4)
-
-        this.background3 = this.add.tileSprite(0, 0,this.cameras.main.width, backgroundHeight,  'backgroundC3')
-        scale = this.calculateScale(this.background3)
-        this.background3.setScale(scale[0] , scale[1])
-            .setOrigin(0, 0)
-        // .setScrollFactor(0.6)
-
-        this.background4 = this.add.tileSprite(0, 0,this.cameras.main.width , backgroundHeight,  'backgroundC4')
-        scale = this.calculateScale(this.background4)
-        this.background4.setScale(scale[0] , scale[1])
-            .setOrigin(0, 0)
-        // .setScrollFactor(0.8)
-    }
-
+    
+    
+    
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     create(_data: never) {
         this.camera = this.cameras.main;
@@ -156,6 +116,7 @@ export class ForestScene extends Scene {
         //     return;
         // }
 
+        // update movements
         this.characterManager.updateCharacterMovement()
         this.backgroundManager.updateBackgroundMovement(delta)
         this.platformManager.updatePlatformsPosition(delta)

@@ -1,4 +1,5 @@
 import {ForestScene} from "./ForestScene.ts";
+import {calculateScale} from "./scaleUtils.ts";
 
 export class CharacterManager {
     scene: ForestScene
@@ -8,7 +9,7 @@ export class CharacterManager {
     
     createCharacter() {
         this.scene.character = this.scene.physics.add.sprite(20, this.scene.camera.height - 400, 'character')
-        const scale = this.scene.calculateScale(this.scene.character)
+        const scale = calculateScale(this.scene.character, this.scene.cameras)
         const scalingNumber: number = 10
         this.scene.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
     }

@@ -1,4 +1,4 @@
-import { ForestScene } from './ForestScene';
+import { ForestScene } from './ForestScene.ts';
 
 export class PlatformManager {
     private scene: ForestScene;

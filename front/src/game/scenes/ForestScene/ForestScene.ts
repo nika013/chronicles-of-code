@@ -1,24 +1,23 @@
 import {Scene} from "phaser";
 import Sprite = Phaser.GameObjects.Sprite;
 import Image = Phaser.GameObjects.Image;
-import {EventBus} from "../EventBus.ts";
+import {EventBus} from "../../EventBus.ts";
 import TileSprite = Phaser.GameObjects.TileSprite;
 import {PlatformManager} from "./platformManager.ts";
+import {BackgroundManager} from "./BackgroundManager.ts";
+import {CharacterManager} from "./CharacterManager.ts";
 
 
-interface Background {
-    obj: Phaser.GameObjects.TileSprite;
-    speed: number;
-}
+
 
 export class ForestScene extends Scene {
-    private background1: TileSprite;
-    private background2: TileSprite;
-    private background3: TileSprite;
-    private background4: TileSprite;
+    background1: TileSprite;
+    background2: TileSprite;
+    background3: TileSprite;
+    background4: TileSprite;
     character: Phaser.GameObjects.Sprite;
     ground: Sprite;
-    private endX: number = 800;
+    endX: number = 800;
 
     private lastTile: TileSprite
 
@@ -28,14 +27,15 @@ export class ForestScene extends Scene {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     platforms: Phaser.Physics.Arcade.Group;
 
-    private backgroun1speed: number = 25;
-    private backgroun2speed: number = 50;
-    private backgroun3speed: number = 80;
-    private backgroun4speed: number = 100;
+    backgroun1speed: number = 25;
+    backgroun2speed: number = 50;
+    backgroun3speed: number = 80;
+    backgroun4speed: number = 100;
     platformsSpeed: number = 120
 
     platformManager: PlatformManager
-
+    backgroundManager: BackgroundManager
+    characterManager: CharacterManager
     constructor ()
     {
         super('ForestScene');
@@ -79,12 +79,12 @@ export class ForestScene extends Scene {
         this.ground.setOrigin(0, 0).setScrollFactor(0);
     }
 
-    private createBoy() {
-        this.character = this.physics.add.sprite(20, this.camera.height - 400, 'character')
-        const scale = this.calculateScale(this.character)
-        const scalingNumber: number = 10
-        this.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
-    }
+    // private createBoy() {
+    //     this.character = this.physics.add.sprite(20, this.camera.height - 400, 'character')
+    //     const scale = this.calculateScale(this.character)
+    //     const scalingNumber: number = 10
+    //     this.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
+    // }
 
     private createBackgrounds() {
         const backgroundHeight = this.cameras.main.height * 0.59
@@ -125,13 +125,16 @@ export class ForestScene extends Scene {
         this.staticPlatforms = this.physics.add.staticGroup()
         this.platforms = this.physics.add.group()
 
-        this.createBackgrounds()
+        this.backgroundManager = new BackgroundManager(this)
+        this.backgroundManager.createBackgrounds()
+        
         this.createGround()
-        this.createBoy()
+        this.characterManager = new CharacterManager(this)
+        this.characterManager.createCharacter()
         this.platformManager = new PlatformManager(this)
         // this.createPlatforms()
         this.platformManager.createPlatforms(this, this.platforms)
-
+        
         //dont know if we need these 2 lines
         // this.physics.add.existing(this.character);
         // this.camera.startFollow(this.character, true, 0.1, 0.0);
@@ -144,79 +147,7 @@ export class ForestScene extends Scene {
 
         EventBus.emit('current-scene-ready', this);
     }
-
-    private updateCharacterMovement() {
-        const centerX = this.cameras.main.width / 4;
-        this.handleCharacterYCoordinate()
-
-        if (this.character.x < centerX || this.character.x > this.endX) {
-            this.handleCharacterXCoordinateMoving()
-        } else {
-            this.handleFlipingCharacter()
-            // Lock character's x position at the center
-            this.character.x = centerX;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            this.character.body.velocity.x = 0; // Stop horizontal movement
-        }
-    }
-
-    private handleFlipingCharacter(){
-        const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
-        moveAmount < 0 ? this.character.flipX = true : this.character.flipX = false
-    }
-
-
-    private handleCharacterYCoordinate() {
-        if (this.cursors.up.isDown && this.character.y >  this.character.displayHeight ) {
-            this.character.body?.setVelocityY(-330); // Jump up
-        }
-    }
-
-    private handleCharacterXCoordinateMoving() {
-        const moveAmount = this.cursors.left.isDown ? -160 : this.cursors.right.isDown ? 160 : 0;
-        const characterRightEdge = this.character.x + this.character.width;
-
-        moveAmount < 0 ? this.character.flipX = true : this.character.flipX = false
-        if (characterRightEdge < this.camera.width && moveAmount > 0) {
-            this.character.body?.setVelocityX(moveAmount);
-
-        } else if (this.character.x > 20 && moveAmount < 0) {
-            this.character.body?.setVelocityX(moveAmount);
-        }else {
-            this.character.body?.setVelocityX(0);
-
-        }
-    }
     
-
-    private moveBackground(delta: number, forward: boolean) {
-        const backgrounds: Background[] = [
-            {obj: this.background1, speed: this.backgroun1speed},
-            {obj: this.background2, speed: this.backgroun2speed},
-            {obj: this.background3, speed: this.backgroun3speed},
-            {obj: this.background4, speed: this.backgroun4speed}
-        ];
-
-        if (forward) {
-            backgrounds.forEach((bg: Background) => {
-                bg.obj.tilePositionX += bg.speed / delta;
-            });
-        } else {
-            backgrounds.forEach((bg: Background) => {
-                bg.obj.tilePositionX -= bg.speed / delta;
-            });
-        }
-    }
-
-    private updateBackgroundMovement(delta: number ) {
-        if (this.cursors.left.isDown) {
-            this.moveBackground(delta, false)
-        } else if (this.cursors.right.isDown) {
-            this.moveBackground(delta, true)
-        }
-    }
-
     update(_time: never, delta: number) {
 
         console.log("heh")
@@ -225,8 +156,8 @@ export class ForestScene extends Scene {
         //     return;
         // }
 
-        this.updateCharacterMovement()
-        this.updateBackgroundMovement(delta)
+        this.characterManager.updateCharacterMovement()
+        this.backgroundManager.updateBackgroundMovement(delta)
         this.platformManager.updatePlatformsPosition(delta)
     }
 

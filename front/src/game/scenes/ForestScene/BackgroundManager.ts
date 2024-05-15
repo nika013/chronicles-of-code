@@ -1,5 +1,5 @@
 import {ForestScene} from "./ForestScene.ts";
-import {calculateScale} from "./scaleUtils.ts";
+import {calculateScale} from "./utils.ts";
 
 interface Background {
     obj: Phaser.GameObjects.TileSprite;

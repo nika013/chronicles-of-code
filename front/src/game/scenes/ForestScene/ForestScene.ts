@@ -5,7 +5,8 @@ import TileSprite = Phaser.GameObjects.TileSprite;
 import {PlatformManager} from "./platformManager.ts";
 import {BackgroundManager} from "./BackgroundManager.ts";
 import {CharacterManager} from "./CharacterManager.ts";
-import {calculateScale} from "./scaleUtils.ts";
+import {calculateScale, setupCamera} from "./utils.ts";
+import {AssetManager} from "./AssetManager.ts";
 
 
 
@@ -35,6 +36,7 @@ export class ForestScene extends Scene {
     platformManager: PlatformManager
     backgroundManager: BackgroundManager
     characterManager: CharacterManager
+    assetManager: AssetManager
     
     constructor ()
     {
@@ -43,17 +45,11 @@ export class ForestScene extends Scene {
     
     init() {
         console.log('inited')
-
     }
 
     preload() {
-        this.load.image('backgroundC1', '/assets/Forest/PNG/Backgrounds/background C layer1.png')
-        this.load.image('backgroundC2', '/assets/Forest/PNG/Backgrounds/background C layer2.png')
-        this.load.image('backgroundC3', '/assets/Forest/PNG/Backgrounds/background C layer3.png')
-        this.load.image('backgroundC4', '/assets/Forest/PNG/Backgrounds/background C layer4.png')
-        this.load.image('ground', '/assets/Forest/PNG/groundC.png')
-        this.load.image('character', '/assets/Forest/PNG/boyWithBull.png')
-        this.load.image('tile1', '/assets/Forest/Platforms/tile1.png')
+        this.assetManager = new AssetManager(this)
+        this.assetManager.preloadAssets()
     }
 
     private createGround() {
@@ -71,16 +67,18 @@ export class ForestScene extends Scene {
         // Set the origin and scroll factor
         this.ground.setOrigin(0, 0).setScrollFactor(0);
     }
-    
+
+
     
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     create(_data: never) {
-        this.camera = this.cameras.main;
-        this.camera.setPosition(0, 0);
-        this.camera.setBounds(0, 0, this.game.config.width as number, this.game.config.height as number);
-
-        this.camera.setBackgroundColor(0x35ff00);
+        this.camera = setupCamera(this, 0x35ff00)
+        // this.camera = this.cameras.main;
+        // this.camera.setPosition(0, 0);
+        // this.camera.setBounds(0, 0, this.game.config.width as number, this.game.config.height as number);
+        //
+        // this.camera.setBackgroundColor(0x35ff00);
 
         this.staticPlatforms = this.physics.add.staticGroup()
         this.platforms = this.physics.add.group()

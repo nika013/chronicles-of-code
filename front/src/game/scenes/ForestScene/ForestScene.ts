@@ -53,11 +53,10 @@ export class ForestScene extends Scene {
     }
 
     private createGround() {
-        // Create the ground sprite at the desired position
         this.ground = this.staticPlatforms.create(0, this.cameras.main.height - 30, 'ground');
 
-        const scale = calculateScale(this.ground, this.cameras);
-        this.ground.setScale(scale[0]*2, scale[1]/9);
+        const [xScale, yScale] = calculateScale(this.ground, this.cameras);
+        this.ground.setScale(xScale*2, yScale/9);
 
         // Manually update the physics body to match the sprite's visual bounds
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -67,18 +66,10 @@ export class ForestScene extends Scene {
         // Set the origin and scroll factor
         this.ground.setOrigin(0, 0).setScrollFactor(0);
     }
-
-
-    
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     create(_data: never) {
         this.camera = setupCamera(this, 0x35ff00)
-        // this.camera = this.cameras.main;
-        // this.camera.setPosition(0, 0);
-        // this.camera.setBounds(0, 0, this.game.config.width as number, this.game.config.height as number);
-        //
-        // this.camera.setBackgroundColor(0x35ff00);
 
         this.staticPlatforms = this.physics.add.staticGroup()
         this.platforms = this.physics.add.group()
@@ -91,8 +82,8 @@ export class ForestScene extends Scene {
         this.characterManager.createCharacter()
         this.platformManager = new PlatformManager(this)
         // this.createPlatforms()
-        this.platformManager.createPlatforms(this, this.platforms)
-        
+        this.platformManager.createPlatforms(this)
+
         //dont know if we need these 2 lines
         // this.physics.add.existing(this.character);
         // this.camera.startFollow(this.character, true, 0.1, 0.0);
@@ -108,7 +99,7 @@ export class ForestScene extends Scene {
     
     update(_time: never, delta: number) {
 
-        console.log("heh")
+
         // if (this.lastTile.x <900) {
         //     this.finishGame();
         //     return;

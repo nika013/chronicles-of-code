@@ -4,42 +4,70 @@ export class PlatformManager {
     private scene: ForestScene;
     private platforms: Phaser.Physics.Arcade.Group;
     // private tempPlatforms: Phaser.Physics.Arcade.Group;
+    
+    groundTop: number
+    groundHeight : number 
+      
 
     constructor(scene: ForestScene) {
         this.scene = scene;
+        this.groundTop = this.scene.camera.height - this.scene.ground.height
+        this.groundHeight = this.scene.ground.height
+    }
+    
+    private firstPlatform() {
+        const xCoordinate: number = 200;
+        const scene = this.scene
+        const randomNumber: number = Math.random();
+        const height = scene.textures.get('tile1').getSourceImage().height;
+        const y = this.groundTop - randomNumber * 
+            (scene.camera.height - scene.character.displayHeight - this.groundHeight - height);
+        // const tilePlatform = this.scene.add.sprite(300 + i * xCoordinate, y, 'tile1')
+        const tilePlatform = this.scene.platforms.create(300 + xCoordinate, y, 'tile1');
+        tilePlatform.body.setAllowGravity(false);
+        tilePlatform.body.setImmovable(true);
+        tilePlatform.body.setCollideWorldBounds(true);
+        tilePlatform.body.checkCollision.right = true;
+        tilePlatform.body.checkCollision.left = true;
+        tilePlatform.setCollideWorldBounds(true);
+        tilePlatform.body.setSize(tilePlatform.width, tilePlatform.height);
     }
 
-    public createPlatforms(scene: ForestScene, platforms: Phaser.Physics.Arcade.Group) {
+    createPlatforms(scene: ForestScene) {
 
-        const numIterations: number = 6;
-        const xCoordinate: number = 500;
-        const groundTop = scene.camera.height - scene.ground.height;
-        const groundHeight = scene.ground.height;
-        console.log("Ground height: " + groundHeight);
-        console.log("groundTop: " + groundTop);
-        console.log("camera.height: " + scene.camera.height);
+        // this.firstPlatform()
+        // const numIterations: number = 6;
+        // const xCoordinate: number = 500;
+        this.firstPlatform()
 
-        for (let i = 0; i < numIterations; i++) {
-            const randomNumber: number = Math.random();
-            const height = scene.textures.get('tile1').getSourceImage().height;
-            const y = groundTop - randomNumber * (scene.camera.height - scene.character.displayHeight - groundHeight - height);
-            const tilePlatform = platforms.create(300 + i * xCoordinate, y, 'tile1');
-            tilePlatform.body.setAllowGravity(false);
-            tilePlatform.body.setImmovable(true);
-            tilePlatform.body.setCollideWorldBounds(true);
-            tilePlatform.body.checkCollision.right = true;
-            tilePlatform.setCollideWorldBounds(true);
-            tilePlatform.body.setSize(tilePlatform.width, tilePlatform.height);
-        }
+        // for (let i = 0; i < numIterations; i++) {
+        //     const randomNumber: number = Math.random();
+        //     const height = scene.textures.get('tile1').getSourceImage().height;
+        //     const y = this.groundTop - randomNumber * (scene.camera.height - scene.character.displayHeight - this.groundHeight - height);
+        //     const tilePlatform = this.scene.platforms.create(300 + i * xCoordinate, y, 'tile1');
+        //     tilePlatform.body.setAllowGravity(false);
+        //     tilePlatform.body.setImmovable(true);
+        //     tilePlatform.body.setCollideWorldBounds(true);
+        //     tilePlatform.body.checkCollision.right = true;
+        //     tilePlatform.body.checkCollision.left = true;
+        //     tilePlatform.setCollideWorldBounds(true);
+        //     tilePlatform.body.setSize(tilePlatform.width, tilePlatform.height);
+        // }
     }
 
     public updatePlatformsPosition(delta: number) {
         // Update the platforms position here
         const updatePosition = (platform: Phaser.GameObjects.Sprite) => {
+            // const moveAmount = this.scene.cursors.left.isDown ? -this.scene.platformsSpeed / delta : this.scene.cursors.right.isDown ? this.scene.platformsSpeed / delta : 0;
+
+            const moveAmount = this.scene.platformsSpeed / delta
+            
             if (this.scene.cursors.left.isDown) {
-                platform.body.x += this.scene.platformsSpeed / delta;
+                platform.body.x += moveAmount
+                platform.x += moveAmount
             } else if (this.scene.cursors.right.isDown) {
-                platform.body.x -= this.scene.platformsSpeed / delta;
+                platform.body.x -= moveAmount;
+                platform.x -= moveAmount
             }
         };
 
@@ -51,7 +79,8 @@ export class PlatformManager {
     }
 
     public setColliderToPlatforms() {
-        // Set the colliders here
-        this.scene.physics.add.collider(this.scene.character, this.platforms);
+        this.scene.physics.add.collider(this.scene.character, this.scene.platforms, () => {
+            console.log('Collider triggered');
+        });
     }
 }

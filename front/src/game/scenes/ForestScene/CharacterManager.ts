@@ -1,6 +1,6 @@
 import {ForestScene} from "./ForestScene.ts";
 import {calculateScale} from "./utils.ts";
-
+import { CHARACTER_VELOCITY_X, CHARACTER_VELOCITY_Y } from "./constants"
 export class CharacterManager {
     scene: ForestScene
     constructor(scene: ForestScene) {
@@ -12,6 +12,7 @@ export class CharacterManager {
         const scale = calculateScale(this.scene.character, this.scene.cameras)
         const scalingNumber: number = 10
         this.scene.character.setScale(scale[0]/scalingNumber, scale[0]/scalingNumber).setOrigin(0, 0).setScrollFactor(0)
+
     }
 
     updateCharacterMovement() {
@@ -31,20 +32,22 @@ export class CharacterManager {
     }
 
     private handleCharacterYCoordinate() {
-        if (this.scene.cursors.up.isDown && this.scene.character.y >  this.scene.character.displayHeight ) {
-            this.scene.character.body?.setVelocityY(-330); // Jump up
+        if (this.scene.cursors.up.isDown && this.scene.character.body?.touching.down) {
+            // if (this.scene.cursors.up.isDown && this.scene.character.y >  this.scene.character.displayHeight ) {
+            this.scene.character.body?.setVelocityY(CHARACTER_VELOCITY_Y);
         }
     }
 
     private handleFlipingCharacter(){
-        const moveAmount = this.scene.cursors.left.isDown ? -160 : this.scene.cursors.right.isDown ? 160 : 0;
+        const moveAmount = this.scene.cursors.left.isDown ? -1*(CHARACTER_VELOCITY_X) : this.scene.cursors.right.isDown ? CHARACTER_VELOCITY_X : 0;
         moveAmount < 0 ? this.scene.character.flipX = true : this.scene.character.flipX = false
     }
-
+    // CHARACTER_VELOCITY: number = 100
     private handleCharacterXCoordinateMoving() {
-        const moveAmount = this.scene.cursors.left.isDown ? -160 : this.scene.cursors.right.isDown ? 160 : 0;
+        const moveAmount = this.scene.cursors.left.isDown ? -1*(CHARACTER_VELOCITY_X): this.scene.cursors.right.isDown ? CHARACTER_VELOCITY_X : 0;
         const characterRightEdge = this.scene.character.x + this.scene.character.width;
 
+        console.log("moveAmoubnt: ", moveAmount)
         moveAmount < 0 ? this.scene.character.flipX = true : this.scene.character.flipX = false
         if (characterRightEdge < this.scene.camera.width && moveAmount > 0) {
             this.scene.character.body?.setVelocityX(moveAmount);

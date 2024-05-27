@@ -1,4 +1,4 @@
-import {TokenType} from "../TokenType.ts";
+import {TokenType} from "./TokenType.ts";
  
 export const keywords: Map<string, TokenType> = new Map([
     // TO DO: add else here, could not guess its georgian name

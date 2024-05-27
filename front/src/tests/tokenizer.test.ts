@@ -1,5 +1,5 @@
-import { Token } from "../Interpreter/Token";
-import { TokenType } from "../Interpreter/TokenType";
+import { Token } from "../Interpreter/Tokenizer/Token";
+import { TokenType } from "../Interpreter/Tokenizer/TokenType";
 import { Tokenizer } from "../Interpreter/Tokenizer/Tokenizer";
 
 

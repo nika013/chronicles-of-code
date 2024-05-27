@@ -1,6 +1,6 @@
 import {Expression} from "../Expression";
 import {ExpressionVisitor} from "../ExpressionVisitor/ExpressionVisitor";
-import {LiteralType} from "../../../literalType.ts";
+import {LiteralType} from "../../../Tokenizer/literalType.ts";
 
 export class Literal extends Expression {
     value: LiteralType

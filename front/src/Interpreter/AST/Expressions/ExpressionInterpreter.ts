@@ -5,8 +5,8 @@ import {Literal} from "./ConcreteExpressions/Literal.ts";
 import {Binary} from "./ConcreteExpressions/Binary.ts";
 import {Grouping} from "./ConcreteExpressions/Grouping.ts";
 import {Unary} from "./ConcreteExpressions/Unary.ts";
-import {TokenType} from "../../TokenType.ts";
-import {Token} from "../../Token.ts";
+import {TokenType} from "../../Tokenizer/TokenType.ts";
+import {Token} from "../../Tokenizer/Token.ts";
 import { VarExpr } from "./ConcreteExpressions/VarExpr.ts";
 import { Environment } from "../Statements/ConcreteStatements/Environment.ts";
 

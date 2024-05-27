@@ -6,7 +6,7 @@ export class ForStatement extends StatementContainer implements Statement {
     private iterationCount: number
 
     constructor(statements: Statement[] = [], iterationCount: number) {
-        super(statements);
+        super();
         this.iterationCount = iterationCount;
     }
 

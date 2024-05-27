@@ -1,7 +1,7 @@
-import {Token} from "../Token.ts";
-import {TokenType} from "../TokenType.ts";
+import {Token} from "./Token.ts";
+import {TokenType} from "./TokenType.ts";
 import {keywords} from "./Keywords.ts"
-import {LiteralType} from "../literalType.ts";
+import {LiteralType} from "./literalType.ts";
 
 export class Tokenizer  {
     private source: string;

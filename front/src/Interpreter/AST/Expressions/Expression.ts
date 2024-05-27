@@ -1,4 +1,4 @@
-import {Token} from "../../Token.ts";
+import {Token} from "../../Tokenizer/Token.ts";
 import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor";
  
 export abstract class Expression {

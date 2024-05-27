@@ -2,13 +2,13 @@
 
 import {ExpressionInterpreter} from "../Interpreter/AST/Expressions/ExpressionInterpreter.ts";
 import {Literal} from "../Interpreter/AST/Expressions/ConcreteExpressions/Literal.ts";
-import {Token} from "../Interpreter/Token.ts";
-import {TokenType} from "../Interpreter/TokenType.ts";
+import {Token} from "../Interpreter/Tokenizer/Token.ts";
+import {TokenType} from "../Interpreter/Tokenizer/TokenType.ts";
 import {Binary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Binary.ts";
 import { Grouping } from "../Interpreter/AST/Expressions/ConcreteExpressions/Grouping.ts";
 import {Expression} from "../Interpreter/AST/Expressions/Expression.ts";
 import {Unary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Unary.ts";
-import {LiteralType} from "../Interpreter/literalType.ts";
+import {LiteralType} from "../Interpreter/Tokenizer/literalType.ts";
 import { ExpressionParser } from "../Interpreter/AST/Expressions/ExpressionParser.ts";
 import { Environment, VarType, Variable } from "../Interpreter/AST/Statements/ConcreteStatements/Environment.ts";
 

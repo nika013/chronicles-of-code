@@ -6,7 +6,7 @@ export class ConditionalStatement extends StatementContainer {
     private expression: Expression
 
     constructor(statements: Statement[] = [], expression: Expression) {
-        super(statements);
+        super();
         this.expression = expression
     }
 

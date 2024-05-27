@@ -13,8 +13,8 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
 
  */
 
-import {TokenType} from "../../TokenType.ts";
-import {Token} from "../../Token.ts";
+import {TokenType} from "../../Tokenizer/TokenType.ts";
+import {Token} from "../../Tokenizer/Token.ts";
 import {Expression} from "./Expression";
 import {Binary} from "./ConcreteExpressions/Binary.ts";
 import {Unary} from "./ConcreteExpressions/Unary.ts";

@@ -7,6 +7,7 @@ import {Literal} from "../Interpreter/AST/Expressions/ConcreteExpressions/Litera
 import {Grouping} from "../Interpreter/AST/Expressions/ConcreteExpressions/Grouping.ts";
 import {Unary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Unary.ts";
 import {Binary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Binary.ts";
+import { VarExpr } from "../Interpreter/AST/Expressions/ConcreteExpressions/VarExpr.ts";
 
 function createToken(type: TokenType, lexeme: string, literal: LiteralType) {
     return new Token(type, lexeme, literal);
@@ -627,6 +628,26 @@ describe('Logical Operator Parsing Tests', () => {
         expect((binaryExpr.right as Literal).value).toBe(true);
     });
 });
+
+describe('VarExpression', () => {
+    test('basic operation', () => {
+        const tokens: Token[] = [
+            new Token(TokenType.IDENTIFIER, "ერთი", null),
+            new Token(TokenType.PLUS, '+', null),
+            new Token(TokenType.NUMBER, '1', 1),
+            new Token(TokenType.EOF, "", null)
+        ]
+
+        const parser = new ExpressionParser(tokens)
+        const expression = parser.parse()
+
+        expect(expression).toBeInstanceOf(Binary);
+        const binaryExpr = expression as Binary;
+        expect(binaryExpr.operator.type).toBe(TokenType.PLUS);
+        expect((binaryExpr.left as VarExpr).name.lexeme).toBe('ერთი');
+        expect((binaryExpr.right as Literal).value).toBe(1);
+    })
+})
 
 
 //

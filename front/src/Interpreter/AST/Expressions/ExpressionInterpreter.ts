@@ -7,8 +7,25 @@ import {Grouping} from "./ConcreteExpressions/Grouping.ts";
 import {Unary} from "./ConcreteExpressions/Unary.ts";
 import {TokenType} from "../../TokenType.ts";
 import {Token} from "../../Token.ts";
+import { VarExpr } from "./ConcreteExpressions/VarExpr.ts";
+import { Environment } from "../Statements/ConcreteStatements/Environment.ts";
 
 export class ExpressionInterpreter implements ExpressionVisitor<unknown>  {
+    private globalEnvironment: Environment
+    private localEnvironments: Environment[] = []
+
+    setGlobalEnvironment(env: Environment) {
+        this.globalEnvironment = env
+    }
+
+    setLocalEnvironments(envs: Environment[]) {
+        this.localEnvironments = envs
+    }
+
+    addLocalEnvironment(env: Environment) {
+        this.localEnvironments.push(env)
+    }
+
     interpret(expression: Expression): unknown {
         try {
             return this.evaluate(expression);
@@ -166,6 +183,19 @@ export class ExpressionInterpreter implements ExpressionVisitor<unknown>  {
         }
     }
 
+    visitVarExpr(varExpr: VarExpr): unknown {
+        let variable = this.globalEnvironment.getVariable(varExpr.name.lexeme);
+        if (!variable) {
+            for (const env of this.localEnvironments) {
+                variable = env.getVariable(varExpr.name.lexeme);
+                if (variable) {
+                    break;
+                }
+            }
+        }
+        return variable?.value;
+    }
+    
     private checkNumberOperand(operator: Token, operand: unknown): void {
         if (typeof operand !== 'number') {
             throw new Error(`Operand must be a number. Found ${operand} for operator ${operator.lexeme}.`);

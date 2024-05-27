@@ -9,7 +9,7 @@ factor         → unary ( ( "/" | "*" ) unary )* ;
 unary          → ( "!" | "-" ) unary
                | primary ;
 primary        → NUMBER | STRING | "true" | "false" | "nil"
-               | "(" expression ")" ;
+               | "(" expression ")" | IDENTIFIER ;
 
  */
 
@@ -22,6 +22,7 @@ import {Literal} from "./ConcreteExpressions/Literal.ts";
 import {Grouping} from "./ConcreteExpressions/Grouping.ts";
 import {ParseError} from "../ParseError.ts";
 import {ExpressionVisitor} from "./ExpressionVisitor/ExpressionVisitor.ts";
+import { VarExpr } from "./ConcreteExpressions/VarExpr.ts";
 
 /*
     // equality       → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -67,6 +68,11 @@ export class ExpressionParser {
     constructor(tokens: Token[]) {
         // console.log(tokens)
         this.tokens = tokens
+    }
+
+    setTokens(tokens: Token[] = []) {
+        this.tokens = tokens
+        this.current = 0
     }
 
     public parse(): Expression {
@@ -176,7 +182,7 @@ export class ExpressionParser {
     }
 
 //     primary        → NUMBER | STRING | "true" | "false" | (we don't have nill) "nil"
-// | "(" expression ")" ;
+// | "(" expression ")" | IDENTIFIER;
     private primary(): Expression {
         if(this.match(TokenType.NUMBER, TokenType.STRING)) {
             const expr: Token = this.previous()
@@ -196,6 +202,11 @@ export class ExpressionParser {
 
             this.consume(TokenType.RIGHT_PAREN, ") აკლია")
             return new Grouping(expression)
+        }
+
+        if (this.match(TokenType.IDENTIFIER)) {
+            const varName = this.previous()
+            return new VarExpr(varName)
         }
         
         throw new Error( " we're here: TokenType.SOMETHINGS_WRONG")

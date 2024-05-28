@@ -1,7 +1,7 @@
-import {Token} from "../Token.ts";
-import {TokenType} from "../TokenType.ts";
+import {Token} from "./Token.ts";
+import {TokenType} from "./TokenType.ts";
 import {keywords} from "./Keywords.ts"
-import {LiteralType} from "../literalType.ts";
+import {LiteralType} from "./literalType.ts";
 
 export class Tokenizer  {
     private source: string;
@@ -102,7 +102,7 @@ export class Tokenizer  {
         }
         const text: string = this.source.substring(this.start, this.current);
         const type = keywords.get(text) || TokenType.IDENTIFIER;  // Fallback to IDENTIFIER if not found
-
+        
         switch (type) {
             case TokenType.TRUE:
                 this.addKeyWordToken(TokenType.TRUE, text, true)

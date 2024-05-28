@@ -1,5 +1,5 @@
-import { Token } from "../Interpreter/Token";
-import { TokenType } from "../Interpreter/TokenType";
+import { Token } from "../Interpreter/Tokenizer/Token";
+import { TokenType } from "../Interpreter/Tokenizer/TokenType";
 import { Tokenizer } from "../Interpreter/Tokenizer/Tokenizer";
 
 
@@ -10,25 +10,25 @@ function addEOF(tokens: Token[]) {
 describe('test Token', () => {
   test('test toString & constructor', () => {
     const token = new Token(TokenType.LEFT_BRACE, '(', null)
-    const toStr = "22 ( null"
+    const toStr = "23 ( null"
     expect(toStr).toEqual(token.toString())
   })
 
   test('test right brace', () => {
     const token = new Token(TokenType.RIGHT_BRACE, ')', null)
-    const toStr = "23 ) null"
+    const toStr = "24 ) null"
     expect(toStr).toEqual(token.toString())
   })
 
   test('test if', () => {
     const token = new Token(TokenType.IF, 'თუ', null)
-    const toStr = "0 თუ null"
+    const toStr = "1 თუ null"
     expect(toStr).toEqual(token.toString())
   })
 
   test('test number', () => {
     const token = new Token(TokenType.NUMBER, '123', 123)
-    const toStr = "11 123 123"
+    const toStr = "12 123 123"
     expect(toStr).toEqual(token.toString())
   })
 })

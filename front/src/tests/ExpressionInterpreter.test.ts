@@ -2,13 +2,15 @@
 
 import {ExpressionInterpreter} from "../Interpreter/AST/Expressions/ExpressionInterpreter.ts";
 import {Literal} from "../Interpreter/AST/Expressions/ConcreteExpressions/Literal.ts";
-import {Token} from "../Interpreter/Token.ts";
-import {TokenType} from "../Interpreter/TokenType.ts";
+import {Token} from "../Interpreter/Tokenizer/Token.ts";
+import {TokenType} from "../Interpreter/Tokenizer/TokenType.ts";
 import {Binary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Binary.ts";
 import { Grouping } from "../Interpreter/AST/Expressions/ConcreteExpressions/Grouping.ts";
 import {Expression} from "../Interpreter/AST/Expressions/Expression.ts";
 import {Unary} from "../Interpreter/AST/Expressions/ConcreteExpressions/Unary.ts";
-import {LiteralType} from "../Interpreter/literalType.ts";
+import {LiteralType} from "../Interpreter/Tokenizer/literalType.ts";
+import { ExpressionParser } from "../Interpreter/AST/Expressions/ExpressionParser.ts";
+import { Environment, VarType, Variable } from "../Interpreter/AST/Statements/ConcreteStatements/Environment.ts";
 
 describe('Interpreter Literal Evaluations', () => {
     const interpreter = new ExpressionInterpreter(); // Assuming the interpreter doesn't require initial setup
@@ -269,3 +271,44 @@ describe('Complex Expression Interpretation', () => {
         expect(result).toEqual("53"); // Assuming your language handles implicit conversion like JavaScript
     });
 });
+
+describe('test variables', () => {
+    test('basic arithmetic operations with variables', () => {
+        const tokens: Token[] = [
+            new Token(TokenType.IDENTIFIER, 'ერთი', null),
+            new Token(TokenType.PLUS, '+', null),
+            new Token(TokenType.NUMBER, '1', 1),
+            new Token(TokenType.EOF, '', '')
+        ]
+
+        const parser = new ExpressionParser(tokens)
+        const expression = parser.parse()
+        const interpreter = new ExpressionInterpreter()
+        const globalEnvironment = new Environment()
+        interpreter.setGlobalEnvironment(globalEnvironment)
+        globalEnvironment.addOrSetVariable(new Variable(VarType.NUMBER, 'ერთი', 1))
+    
+        const actualValue = interpreter.interpret(expression)
+        expect(actualValue).toBe(2)
+    })
+
+    test('bolean operation with variable', () => {
+        const tokens: Token[] = [
+            new Token(TokenType.IDENTIFIER, 'არის_კედელი', null),
+            new Token(TokenType.AND, 'და', null),
+            new Token(TokenType.TRUE, 'ჭეშმარიტი', true),
+            new Token(TokenType.EOF, '', '')
+        ]
+
+        // can be decomposed
+        const parser = new ExpressionParser(tokens)
+        const expression = parser.parse()
+        const interpreter = new ExpressionInterpreter()
+        const globalEnvironment = new Environment()
+        interpreter.setGlobalEnvironment(globalEnvironment)
+        globalEnvironment.addOrSetVariable(new Variable(VarType.BOOLEAN, 'არის_კედელი', true))
+    
+        const actualValue = interpreter.interpret(expression)
+        expect(actualValue).toBe(true)
+    })
+})

@@ -1,4 +1,4 @@
-import {TokenType} from "../TokenType.ts";
+import {TokenType} from "./TokenType.ts";
  
 export const keywords: Map<string, TokenType> = new Map([
     // TO DO: add else here, could not guess its georgian name
@@ -9,8 +9,8 @@ export const keywords: Map<string, TokenType> = new Map([
     ["სანამ", TokenType.WHILE],
     ["თუ", TokenType.IF],
     ["ან", TokenType.OR],
-    ["რიცხვი", TokenType.NUMBER],
-    ["სიტყვა", TokenType.STRING],
+    ["რიცხვი", TokenType.VAR_TYPE],
+    ["სიტყვა", TokenType.VAR_TYPE],
     // TO DO: change its name
-    ["ბულეანი", TokenType.BOOLEAN],
+    ["ბულეანი", TokenType.VAR_TYPE],
 ]);

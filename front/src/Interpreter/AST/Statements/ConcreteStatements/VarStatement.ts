@@ -1,23 +1,20 @@
 import { Expression } from "../../Expressions/Expression";
 import { Statement } from "../Interfaces/Statement";
 import { Visitor } from "../Interfaces/Visitor";
-import { Variable } from "./VariableContainer";
+import { VarType } from "./Environment";
 
 export class VarStatement implements Statement {
+    type: VarType
+    name: string
+    intializer: Expression
+
+    constructor(type: VarType, name: string, initalizer: Expression) {
+        this.type = type 
+        this.name = name
+        this.intializer = initalizer
+    }
     
-    private variable: Variable
-    private expression: Expression
-
-    constructor(variable: Variable, expression: Expression) {
-        this.variable = variable
-        this.expression = expression
-    }
-
-    public getVariable(): Variable {
-        return this.variable
-    }
-
-    public accept(visitor: Visitor): void {
+    accept(visitor: Visitor): void {
         visitor.doVarStatement(this)
     }
 }

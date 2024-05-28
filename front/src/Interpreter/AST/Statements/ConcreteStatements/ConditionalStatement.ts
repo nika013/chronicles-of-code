@@ -3,14 +3,10 @@ import { Statement } from "../Interfaces/Statement";
 import { StatementContainer } from "./StatementContainer";
 
 export class ConditionalStatement extends StatementContainer {
-    private expression: Expression
+    condition: Expression
 
-    constructor(statements: Statement[] = [], expression: Expression) {
-        super();
-        this.expression = expression
-    }
-
-    public getExpression(): Expression {
-        return this.expression
+    constructor(statements: Statement[] = [], condition: Expression) {
+        super(statements);
+        this.condition = condition
     }
 }

@@ -1,4 +1,5 @@
 export enum TokenType {
+    PLACEHOLDER,
     // keywords
     IF, ELSE, FOR, WHILE, AND, NOT, OR, 
     TRUE, FALSE,

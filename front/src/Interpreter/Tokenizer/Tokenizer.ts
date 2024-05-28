@@ -102,7 +102,7 @@ export class Tokenizer  {
         }
         const text: string = this.source.substring(this.start, this.current);
         const type = keywords.get(text) || TokenType.IDENTIFIER;  // Fallback to IDENTIFIER if not found
-
+        
         switch (type) {
             case TokenType.TRUE:
                 this.addKeyWordToken(TokenType.TRUE, text, true)

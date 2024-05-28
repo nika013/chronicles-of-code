@@ -1,7 +1,6 @@
 import {TokenType} from "./TokenType.ts";
 import {LiteralType} from "./literalType.ts";
 
-
 export class Token {
     type: TokenType;
     lexeme: string;
